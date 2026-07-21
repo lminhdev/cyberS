@@ -360,6 +360,85 @@
         .remediation-box li {
         margin-bottom: 4px;
         }
+
+        /* ===== Leak Dashboard miễn phí (XposedOrNot) ===== */
+.leak-dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin: 1rem 0 1.5rem;
+}
+
+.leak-stat {
+    background: rgba(10, 15, 25, 0.7);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 1rem;
+    text-align: center;
+}
+
+.leak-stat h3 {
+    font-size: 2rem;
+    color: var(--primary-cyan);
+    margin-bottom: 4px;
+}
+
+.leak-stat p {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.timeline {
+    margin-top: 1.5rem;
+    border-left: 2px solid var(--primary-cyan);
+    padding-left: 18px;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 18px;
+    padding-left: 12px;
+}
+
+.timeline-item::before {
+    content: "";
+    position: absolute;
+    left: -24px;
+    top: 4px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--primary-cyan);
+    box-shadow: 0 0 10px var(--primary-cyan);
+}
+
+.timeline-date {
+    color: var(--primary-cyan);
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.timeline-title {
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+.timeline-desc {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 4px;
+}
+
+.loading-scan {
+    text-align: center;
+    padding: 2rem;
+}
+
+.loading-scan i {
+    font-size: 2.5rem;
+    color: var(--primary-cyan);
+    margin-bottom: 12px;
+}
     </style>
 </head>
 <body>
@@ -514,13 +593,12 @@
             }
         }
 
-        // Hàm kiểm tra rò rỉ Email nâng cấp - Bóc tách chi tiết nguồn & loại dữ liệu lộ
-async function checkEmailLeak() {
+        async function checkEmailLeak() {
     const email = document.getElementById('emailInput').value.trim();
     const resultBox = document.getElementById('leakResult');
 
     if (!email || !email.includes('@')) {
-        alert('Vui lòng nhập định dạng Email hợp lệ!');
+        alert('Vui lòng nhập email hợp lệ!');
         return;
     }
 
@@ -528,32 +606,37 @@ async function checkEmailLeak() {
     resultBox.className = 'result-box';
     resultBox.style.background = 'rgba(18, 26, 43, 0.9)';
     resultBox.innerHTML = `
-        <div style="text-align: center; padding: 2rem;">
-            <i class="fa-solid fa-radar fa-spin" style="font-size: 2.5rem; color: var(--primary-cyan); margin-bottom: 15px;"></i>
-            <p style="font-weight: 600;">Đang truy quét cơ sở dữ liệu rò rỉ toàn cầu...</p>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 5px;">Kiểm tra danh mục Pastebin, Darkweb & Data Dumps</p>
+        <div class="loading-scan">
+            <i class="fa-solid fa-radar fa-spin"></i>
+            <h3>Đang quét cơ sở dữ liệu rò rỉ...</h3>
+            <p style="color: var(--text-muted); margin-top: 6px;">
+                Kiểm tra email trên các nguồn dữ liệu công khai
+            </p>
         </div>
     `;
 
     try {
-        // Truy vấn API Breach Analytics nâng cấp của XposedOrNot
-        const res = await fetch(`https://api.xposedornot.com/v1/breach-analytics?email=${encodeURIComponent(email)}`);
+        const res = await fetch(
+            `https://api.xposedornot.com/v1/breach-analytics?email=${encodeURIComponent(email)}`
+        );
+
         const data = await res.json();
 
         const breaches = data?.ExposedBreaches?.breaches_details || [];
-        const exposedDataSummary = data?.ExposedData || [];
+        const exposedData = data?.ExposedData || [];
         const riskScore = data?.RiskScore?.risk_score || 0;
 
-        // Trường hợp 1: Email hoàn toàn an toàn
+        // Không tìm thấy rò rỉ
         if (breaches.length === 0) {
             resultBox.className = 'result-box safe';
             resultBox.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 15px;">
-                    <i class="fa-solid fa-shield-check" style="font-size: 2.5rem; color: var(--success-green);"></i>
+                <div style="display:flex;align-items:center;gap:15px;">
+                    <i class="fa-solid fa-shield-check"
+                       style="font-size:2.5rem;color:var(--success-green);"></i>
                     <div>
-                        <h3 style="color: var(--success-green);">Email An Toàn!</h3>
-                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">
-                            Không phát hiện địa chỉ <b>${email}</b> trong bất kỳ cơ sở dữ liệu rò rỉ công khai nào.
+                        <h3 style="color:var(--success-green);">Không phát hiện rò rỉ</h3>
+                        <p style="color:var(--text-muted);margin-top:4px;">
+                            Email <b>${email}</b> chưa xuất hiện trong cơ sở dữ liệu rò rỉ công khai.
                         </p>
                     </div>
                 </div>
@@ -561,71 +644,155 @@ async function checkEmailLeak() {
             return;
         }
 
-        // Trường hợp 2: Phát hiện rò rỉ - Bóc tách chi tiết dữ liệu
-        resultBox.className = 'result-box danger';
+        // Dashboard thống kê
+        const dashboard = `
+            <div class="leak-dashboard">
+                <div class="leak-stat">
+                    <h3>${breaches.length}</h3>
+                    <p>Vụ rò rỉ</p>
+                </div>
+                <div class="leak-stat">
+                    <h3>${riskScore}</h3>
+                    <p>Risk Score</p>
+                </div>
+                <div class="leak-stat">
+                    <h3>${exposedData.length}</h3>
+                    <p>Loại dữ liệu</p>
+                </div>
+            </div>
+        `;
 
-        // Tạo thẻ nhãn cho loại dữ liệu bị lộ (Passwords, IPs, Phones, Names...)
-        const dataBadges = exposedDataSummary.flatMap(d => d.split(';')).map(item => {
-            const clean = item.trim();
-            let icon = 'fa-database';
-            if (clean.toLowerCase().includes('password')) icon = 'fa-key';
-            if (clean.toLowerCase().includes('ip')) icon = 'fa-network-wired';
-            if (clean.toLowerCase().includes('phone')) icon = 'fa-phone';
-            if (clean.toLowerCase().includes('email')) icon = 'fa-envelope';
-            return `<span class="badge-item"><i class="fa-solid ${icon}"></i> ${clean}</span>`;
-        }).join('');
+        // Badge dữ liệu bị lộ
+        const dataBadges = exposedData
+            .flatMap(d => d.split(';'))
+            .map(item => {
+                const clean = item.trim();
+                if (!clean) return '';
 
-        // Tạo danh sách từng vụ rò rỉ cụ thể
+                let icon = 'fa-database';
+                const lower = clean.toLowerCase();
+
+                if (lower.includes('password')) icon = 'fa-key';
+                else if (lower.includes('email')) icon = 'fa-envelope';
+                else if (lower.includes('phone')) icon = 'fa-phone';
+                else if (lower.includes('ip')) icon = 'fa-network-wired';
+                else if (lower.includes('name')) icon = 'fa-user';
+
+                return `
+                    <span class="badge-item">
+                        <i class="fa-solid ${icon}"></i>
+                        ${clean}
+                    </span>
+                `;
+            })
+            .join('');
+
+        // Card từng breach
         const breachCards = breaches.map(b => `
             <div class="breach-card">
                 <div class="breach-header">
-                    <span class="breach-title"><i class="fa-solid fa-building-shield"></i> ${b.breach || 'Dịch vụ rò rỉ'}</span>
-                    <span class="breach-date"><i class="fa-regular fa-calendar-days"></i> ${b.domain || 'Năm lộ: ' + (b.xposed_date || 'N/A')}</span>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        ${b.domain ? `
+                            <img src="https://logo.clearbit.com/${b.domain}"
+                                 width="32" height="32"
+                                 style="border-radius:6px;"
+                                 onerror="this.style.display='none'">
+                        ` : ''}
+                        <span class="breach-title">
+                            <i class="fa-solid fa-building-shield"></i>
+                            ${b.breach || 'Nguồn rò rỉ'}
+                        </span>
+                    </div>
+                    <span class="breach-date">
+                        ${b.xposed_date || 'N/A'}
+                    </span>
                 </div>
-                <p class="breach-desc"><b>Dữ liệu ảnh hưởng:</b> ${b.xposed_data || 'Mật khẩu / Thông tin tài khoản cá nhân'}</p>
+
+                <p class="breach-desc">
+                    <b>Dữ liệu bị lộ:</b>
+                    ${b.xposed_data || 'Thông tin tài khoản'}
+                </p>
             </div>
         `).join('');
 
-        // Render toàn bộ giao diện báo cáo chuyên nghiệp
+        // Timeline
+        const timeline = breaches.map(b => `
+            <div class="timeline-item">
+                <div class="timeline-date">${b.xposed_date || 'N/A'}</div>
+                <div class="timeline-title">${b.breach || 'Nguồn rò rỉ'}</div>
+                <div class="timeline-desc">
+                    ${b.xposed_data || 'Thông tin tài khoản'}
+                </div>
+            </div>
+        `).join('');
+
+        resultBox.className = 'result-box danger';
         resultBox.innerHTML = `
             <div class="leak-summary-header">
                 <div>
-                    <h3 style="color: var(--danger-red); font-size: 1.2rem;">
-                        <i class="fa-solid fa-skull-crossbones"></i> CẢNH BÁO: Phát hiện ${breaches.length} vụ rò rỉ dữ liệu!
+                    <h3 style="color:var(--danger-red);font-size:1.3rem;">
+                        <i class="fa-solid fa-skull-crossbones"></i>
+                        Phát hiện ${breaches.length} vụ rò rỉ dữ liệu
                     </h3>
-                    <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 4px;">
-                        Tài khoản <b>${email}</b> đã bị xâm nhập trong các cuộc tấn công mạng dưới đây.
+                    <p style="color:var(--text-muted);margin-top:6px;">
+                        Email <b>${email}</b> đã xuất hiện trong các cơ sở dữ liệu bị rò rỉ.
                     </p>
                 </div>
-                <div class="risk-badge">Chỉ số rủi ro: ${riskScore}/100</div>
+                <div class="risk-badge">
+                    Risk ${riskScore}/100
+                </div>
             </div>
 
-            <div style="margin-top: 1.2rem;">
-                <strong style="font-size: 0.9rem; color: var(--text-main);">Loại dữ liệu cá nhân đã bị rò rỉ:</strong>
-                <div class="badges-wrapper">${dataBadges || '<span class="badge-item">Thông tin tài khoản</span>'}</div>
+            ${dashboard}
+
+            <div style="margin-top:1rem;">
+                <strong>Loại dữ liệu bị lộ:</strong>
+                <div class="badges-wrapper">
+                    ${dataBadges || '<span class="badge-item">Thông tin tài khoản</span>'}
+                </div>
             </div>
 
-            <div style="margin-top: 1.5rem;">
-                <strong style="font-size: 0.9rem; color: var(--text-main);">Chi tiết các nguồn bị hack:</strong>
-                <div class="breach-list">${breachCards}</div>
+            <div style="margin-top:1.5rem;">
+                <strong>Chi tiết các vụ rò rỉ:</strong>
+                <div class="breach-list">
+                    ${breachCards}
+                </div>
+            </div>
+
+            <div class="timeline">
+                <h3 style="margin-bottom:1rem;color:var(--primary-cyan);">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    Lịch sử rò rỉ
+                </h3>
+                ${timeline}
             </div>
 
             <div class="remediation-box">
-                <strong style="color: var(--primary-cyan);"><i class="fa-solid fa-user-shield"></i> Khuyến nghị hành động khẩn cấp:</strong>
+                <strong style="color:var(--primary-cyan);">
+                    <i class="fa-solid fa-user-shield"></i>
+                    Khuyến nghị hành động
+                </strong>
                 <ul>
-                    <li>Đổi mật khẩu ngay tại các trang web/dịch vụ bị rò rỉ ở trên.</li>
-                    <li>Nếu bạn dùng chung mật khẩu này cho Gmail hoặc Facebook, hãy đổi mật khẩu ở các trang đó ngay.</li>
-                    <li>Kích hoạt Xác thực 2 yếu tố (2FA) để ngăn truy cập trái phép dù lộ mật khẩu.</li>
+                    <li>Đổi mật khẩu ngay tại các dịch vụ bị rò rỉ.</li>
+                    <li>Không sử dụng lại mật khẩu cũ cho tài khoản khác.</li>
+                    <li>Bật xác thực hai lớp (2FA) cho email và các tài khoản quan trọng.</li>
+                    <li>Kiểm tra các tài khoản có dùng cùng email đăng nhập.</li>
                 </ul>
             </div>
         `;
 
     } catch (err) {
         console.error(err);
+
         resultBox.className = 'result-box danger';
         resultBox.innerHTML = `
-            <h3><i class="fa-solid fa-triangle-exclamation"></i> Lỗi kết nối hệ thống truy quét</h3>
-            <p style="margin-top: 5px; font-size: 0.9rem;">Không thể truy vấn cơ sở dữ liệu. Vui lòng kiểm tra lại kết nối mạng hoặc thử lại sau.</p>
+            <h3>
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                Không thể kết nối API
+            </h3>
+            <p style="margin-top:8px;color:var(--text-muted);">
+                Vui lòng kiểm tra kết nối mạng hoặc thử lại sau.
+            </p>
         `;
     }
 }
