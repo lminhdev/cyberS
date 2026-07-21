@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CyberShield | An Toàn Thông Tin Personal Suite</title>
-    <!-- Google Fonts & FontAwesome Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -80,7 +79,6 @@
             flex: 1;
         }
 
-        /* Navigation Tabs */
         .tabs {
             display: flex;
             gap: 10px;
@@ -111,7 +109,6 @@
             box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
         }
 
-        /* Tool Cards */
         .tool-panel {
             display: none;
             background: var(--card-bg);
@@ -171,7 +168,6 @@
             box-shadow: 0 5px 20px rgba(0, 242, 254, 0.4);
         }
 
-        /* Results Box */
         .result-box {
             margin-top: 1.5rem;
             padding: 1.5rem;
@@ -193,7 +189,6 @@
             display: block;
         }
 
-        /* Meter Bar */
         .meter-container {
             height: 10px;
             background: rgba(255, 255, 255, 0.1);
@@ -208,7 +203,6 @@
             transition: width 0.4s ease, background-color 0.4s ease;
         }
 
-        /* Tips Checklist */
         .tips-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -260,7 +254,7 @@
         }
 
         .copy-btn:hover { color: var(--primary-cyan); }
-        /* Styling cho kết quả nâng cấp Leak Checker */
+        
         .leak-summary-header {
         display: flex;
         justify-content: space-between;
@@ -361,84 +355,83 @@
         margin-bottom: 4px;
         }
 
-        /* ===== Leak Dashboard miễn phí (XposedOrNot) ===== */
-.leak-dashboard {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 12px;
-    margin: 1rem 0 1.5rem;
-}
+        .leak-dashboard {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+        margin: 1rem 0 1.5rem;
+        }
 
-.leak-stat {
-    background: rgba(10, 15, 25, 0.7);
-    border: 1px solid var(--card-border);
-    border-radius: 14px;
-    padding: 1rem;
-    text-align: center;
-}
+        .leak-stat {
+        background: rgba(10, 15, 25, 0.7);
+        border: 1px solid var(--card-border);
+        border-radius: 14px;
+        padding: 1rem;
+        text-align: center;
+        }
 
-.leak-stat h3 {
-    font-size: 2rem;
-    color: var(--primary-cyan);
-    margin-bottom: 4px;
-}
+        .leak-stat h3 {
+        font-size: 2rem;
+        color: var(--primary-cyan);
+        margin-bottom: 4px;
+        }
 
-.leak-stat p {
-    color: var(--text-muted);
-    font-size: 0.85rem;
-}
+        .leak-stat p {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        }
 
-.timeline {
-    margin-top: 1.5rem;
-    border-left: 2px solid var(--primary-cyan);
-    padding-left: 18px;
-}
+        .timeline {
+        margin-top: 1.5rem;
+        border-left: 2px solid var(--primary-cyan);
+        padding-left: 18px;
+        }
 
-.timeline-item {
-    position: relative;
-    margin-bottom: 18px;
-    padding-left: 12px;
-}
+        .timeline-item {
+        position: relative;
+        margin-bottom: 18px;
+        padding-left: 12px;
+        }
 
-.timeline-item::before {
-    content: "";
-    position: absolute;
-    left: -24px;
-    top: 4px;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--primary-cyan);
-    box-shadow: 0 0 10px var(--primary-cyan);
-}
+        .timeline-item::before {
+        content: "";
+        position: absolute;
+        left: -24px;
+        top: 4px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--primary-cyan);
+        box-shadow: 0 0 10px var(--primary-cyan);
+        }
 
-.timeline-date {
-    color: var(--primary-cyan);
-    font-weight: 700;
-    font-size: 0.9rem;
-}
+        .timeline-date {
+        color: var(--primary-cyan);
+        font-weight: 700;
+        font-size: 0.9rem;
+        }
 
-.timeline-title {
-    font-weight: 700;
-    margin-top: 2px;
-}
+        .timeline-title {
+        font-weight: 700;
+        margin-top: 2px;
+        }
 
-.timeline-desc {
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    margin-top: 4px;
-}
+        .timeline-desc {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        margin-top: 4px;
+        }
 
-.loading-scan {
-    text-align: center;
-    padding: 2rem;
-}
+        .loading-scan {
+        text-align: center;
+        padding: 2rem;
+        }
 
-.loading-scan i {
-    font-size: 2.5rem;
-    color: var(--primary-cyan);
-    margin-bottom: 12px;
-}
+        .loading-scan i {
+        font-size: 2.5rem;
+        color: var(--primary-cyan);
+        margin-bottom: 12px;
+        }
     </style>
 </head>
 <body>
@@ -449,12 +442,11 @@
         </div>
         <p style="color: var(--text-muted); margin-top: 5px;">Hệ thống bảo vệ tài khoản & Kiểm tra an toàn thông tin cá nhân</p>
         <div class="privacy-badge">
-            <i class="fa-solid fa-lock"></i> 100% Client-Side — Không lưu trữ bất kỳ dữ liệu nào
+            <i class="fa-solid fa-lock"></i> 100% Client-Side — Không lưu trữ dữ liệu người dùng
         </div>
     </header>
 
     <div class="container">
-        <!-- Navigation -->
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('leak-tool')">
                 <i class="fa-solid fa-user-ninja"></i> Kiểm tra Rò Rỉ Email
@@ -463,11 +455,10 @@
                 <i class="fa-solid fa-key"></i> Kiểm Tra & Tạo Mật Khẩu
             </button>
             <button class="tab-btn" onclick="switchTab('tips-tool')">
-                <i class="fa-solid fa-shield-cat"></i> Biện Pháp Bảo Vệ
+                <i class="fa-solid fa-shield-cat"></i> Biện Pháp Bảo Vệ Dữ Liệu Trên Không Gian Mạng 
             </button>
         </div>
 
-        <!-- Tool 1: Email Leak Checker -->
         <div id="leak-tool" class="tool-panel active">
             <h2><i class="fa-solid fa-envelope-open-text" style="color: var(--primary-cyan)"></i> Kiểm tra rò rỉ Email trên không gian mạng</h2>
             <p style="color: var(--text-muted); margin-top: 8px;">
@@ -482,7 +473,6 @@
             <div id="leakResult" class="result-box"></div>
         </div>
 
-        <!-- Tool 2: Password Checker & Generator -->
         <div id="pwd-tool" class="tool-panel">
             <h2><i class="fa-solid fa-vault" style="color: var(--primary-cyan)"></i> Đánh Giá & Gợi Ý Mật Khẩu An Toàn</h2>
             <p style="color: var(--text-muted); margin-top: 8px;">
@@ -505,7 +495,6 @@
                 <p id="pwdCrackTime" style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;"></p>
             </div>
 
-            <!-- Suggestion section if password is weak -->
             <div id="pwdSuggestion" style="margin-top: 2rem; display: none; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
                 <h3 style="color: var(--warning-orange);"><i class="fa-solid fa-triangle-exclamation"></i> Mật khẩu chưa đủ an toàn!</h3>
                 <p style="color: var(--text-muted); margin-top: 5px;">Hệ thống tự động tạo cho bạn một mật khẩu chuẩn quân sự cực kỳ bảo mật:</p>
@@ -522,7 +511,6 @@
             </div>
         </div>
 
-        <!-- Tool 3: Security Best Practices -->
         <div id="tips-tool" class="tool-panel">
             <h2><i class="fa-solid fa-user-shield" style="color: var(--primary-cyan)"></i> Khuyến Nghị Bảo Vệ Tài Khoản Mạng</h2>
             <p style="color: var(--text-muted); margin-top: 8px;">Thực hiện ngay các bước này để bảo vệ tài khoản cá nhân và người thân khỏi Hacker:</p>
@@ -571,7 +559,7 @@
     </footer>
 
     <script>
-        // Tab Navigation Logic
+
         function switchTab(tabId) {
             document.querySelectorAll('.tool-panel').forEach(panel => panel.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -580,7 +568,7 @@
             event.currentTarget.classList.add('active');
         }
 
-        // Toggle Password Visibility
+        
         function togglePwdVisibility() {
             const input = document.getElementById('pwdInput');
             const icon = document.getElementById('eyeIcon');
@@ -626,7 +614,6 @@
         const exposedData = data?.ExposedData || [];
         const riskScore = data?.RiskScore?.risk_score || 0;
 
-        // Không tìm thấy rò rỉ
         if (breaches.length === 0) {
             resultBox.className = 'result-box safe';
             resultBox.innerHTML = `
@@ -644,7 +631,6 @@
             return;
         }
 
-        // Dashboard thống kê
         const dashboard = `
             <div class="leak-dashboard">
                 <div class="leak-stat">
@@ -662,7 +648,6 @@
             </div>
         `;
 
-        // Badge dữ liệu bị lộ
         const dataBadges = exposedData
             .flatMap(d => d.split(';'))
             .map(item => {
@@ -687,7 +672,7 @@
             })
             .join('');
 
-        // Card từng breach
+        
         const breachCards = breaches.map(b => `
             <div class="breach-card">
                 <div class="breach-header">
@@ -715,7 +700,7 @@
             </div>
         `).join('');
 
-        // Timeline
+        
         const timeline = breaches.map(b => `
             <div class="timeline-item">
                 <div class="timeline-date">${b.xposed_date || 'N/A'}</div>
@@ -797,7 +782,6 @@
     }
 }
 
-        // 2. Password Strength Evaluation & Strong Generator
         function evaluatePassword() {
             const pwd = document.getElementById('pwdInput').value;
             const meter = document.getElementById('pwdMeter');
@@ -847,7 +831,6 @@
             }
         }
 
-        // Strong Cryptographic Password Generator
         function generateStrongPwd() {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
             const length = 16;
