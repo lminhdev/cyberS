@@ -1872,8 +1872,108 @@ earth = new THREE.Mesh(
 );
 
 scene.add(earth);
+countries.forEach(c=>{
 
+    const pos = latLngToVector3(c.lat,c.lng,1.01);
 
+    const marker = new THREE.Mesh(
+
+        new THREE.SphereGeometry(0.008),
+
+        new THREE.MeshBasicMaterial({
+            color:0x00ffff
+        })
+
+    );
+
+    marker.position.copy(pos);
+
+    scene.add(marker);
+
+});
+const from=
+
+countries[Math.floor(Math.random()*countries.length)];
+
+let to=
+
+countries[Math.floor(Math.random()*countries.length)];
+
+while(from===to){
+
+to=
+
+countries[Math.floor(Math.random()*countries.length)];
+
+}
+const start=
+
+latLngToVector3(
+
+from.lat,
+
+from.lng,
+
+1.01
+
+);
+
+const end=
+
+latLngToVector3(
+
+to.lat,
+
+to.lng,
+
+1.01
+
+);
+const geometry=
+
+new THREE.BufferGeometry()
+
+.setFromPoints([
+
+start,
+
+end
+
+]);
+
+const material=
+
+new THREE.LineBasicMaterial({
+
+color:0xff3333
+
+});
+
+const line=
+
+new THREE.Line(
+
+geometry,
+
+material
+
+);
+
+scene.add(line);
+setTimeout(()=>{
+
+scene.remove(line);
+
+geometry.dispose();
+
+material.dispose();
+
+},2000);
+setInterval(()=>{
+
+createAttack();
+
+},300);
 /* ===== CLOUD ===== */
 
 const cloudGeometry = new THREE.SphereGeometry(
@@ -2144,19 +2244,6 @@ r*Math.sin(phi)*Math.sin(theta)
 );
 
 }
-countries.forEach(country=>{
-
-const pos=
-
-latLngToVector3(
-
-country.lat,
-
-country.lng,
-
-1.01
-
-);
 
 const marker=
 
@@ -2177,89 +2264,7 @@ marker.position.copy(pos);
 scene.add(marker);
 
 });
-const from=
 
-countries[Math.floor(Math.random()*countries.length)];
-
-let to=
-
-countries[Math.floor(Math.random()*countries.length)];
-
-while(from===to){
-
-to=
-
-countries[Math.floor(Math.random()*countries.length)];
-
-}
-const start=
-
-latLngToVector3(
-
-from.lat,
-
-from.lng,
-
-1.01
-
-);
-
-const end=
-
-latLngToVector3(
-
-to.lat,
-
-to.lng,
-
-1.01
-
-);
-const geometry=
-
-new THREE.BufferGeometry()
-
-.setFromPoints([
-
-start,
-
-end
-
-]);
-
-const material=
-
-new THREE.LineBasicMaterial({
-
-color:0xff3333
-
-});
-
-const line=
-
-new THREE.Line(
-
-geometry,
-
-material
-
-);
-
-scene.add(line);
-setTimeout(()=>{
-
-scene.remove(line);
-
-geometry.dispose();
-
-material.dispose();
-
-},2000);
-setInterval(()=>{
-
-createAttack();
-
-},300);
     </script>
 </body>
 </html>
