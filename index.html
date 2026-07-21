@@ -390,7 +390,106 @@
             Dữ liệu hoàn toàn được mã hóa & xử lý tại Trình duyệt cục bộ (Client-Side Only).
         </p>
     </footer>
+    /* Styling cho kết quả nâng cấp Leak Checker */
+.leak-summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 1rem;
+}
 
+.risk-badge {
+    background: linear-gradient(135deg, #ff4b5c, #ff1744);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    box-shadow: 0 0 12px rgba(255, 75, 92, 0.4);
+}
+
+.badges-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.badge-item {
+    background: rgba(255, 180, 0, 0.15);
+    border: 1px solid var(--warning-orange);
+    color: var(--warning-orange);
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.breach-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
+    max-height: 350px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.breach-card {
+    background: rgba(10, 15, 25, 0.6);
+    border: 1px solid rgba(255, 75, 92, 0.3);
+    border-left: 4px solid var(--danger-red);
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.breach-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.breach-title {
+    color: var(--primary-cyan);
+    font-size: 1rem;
+}
+
+.breach-date {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.breach-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+.remediation-box {
+    margin-top: 1.5rem;
+    background: rgba(0, 242, 254, 0.05);
+    border: 1px solid var(--card-border);
+    padding: 1rem 1.2rem;
+    border-radius: 10px;
+}
+
+.remediation-box ul {
+    margin-left: 1.2rem;
+    margin-top: 8px;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+}
+
+.remediation-box li {
+    margin-bottom: 4px;
+}
     <script>
         // Tab Navigation Logic
         function switchTab(tabId) {
