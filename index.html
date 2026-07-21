@@ -1433,6 +1433,237 @@ riskScore = Math.min(riskScore,100);
         status:found.length===0
 
     });
+            score=Math.max(0,Math.min(100,score));
+
+let level="An toàn";
+let color="#00ff99";
+
+if(score<80){
+
+    level="Cần thận trọng";
+
+    color="#ffb020";
+
+}
+
+if(score<50){
+
+    level="Nguy hiểm";
+
+    color="#ff4d4d";
+
+}
+            const cards=report.map(item=>`
+
+<div class="url-card">
+
+<h4>${item.title}</h4>
+
+<p class="${
+item.status?
+'url-good'
+:
+'url-danger'
+}">
+
+${item.value}
+
+</p>
+
+</div>
+
+`).join("");
+            let warningHTML="";
+
+if(warnings.length){
+
+warningHTML=`
+
+<div class="warning-box">
+
+<h3>
+
+<i class="fa-solid fa-triangle-exclamation"></i>
+
+Cảnh báo
+
+</h3>
+
+<ul>
+
+${warnings.map(x=>`
+
+<li>${x}</li>
+
+`).join("")}
+
+</ul>
+
+</div>
+
+`;
+
+}
+            let recommendation="";
+
+if(score>=80){
+
+recommendation=`
+
+✔ Website có dấu hiệu an toàn.
+
+`;
+
+}
+
+else if(score>=50){
+
+recommendation=`
+
+⚠ Hãy kiểm tra kỹ trước khi đăng nhập hoặc nhập thông tin.
+
+`;
+
+}
+
+else{
+
+recommendation=`
+
+❌ Không nên nhập mật khẩu hoặc thông tin cá nhân.
+
+`;
+
+}
+            const result=document.getElementById("urlResult");
+
+result.innerHTML=`
+
+<div class="url-score-card">
+
+<div
+
+class="url-score-circle"
+
+style="border-color:${color};color:${color};">
+
+${score}
+
+</div>
+
+<div class="url-score-label">
+
+${level}
+
+</div>
+
+</div>
+
+<div class="url-progress">
+
+<div
+
+class="url-progress-bar"
+
+style="width:${score}%">
+
+</div>
+
+</div>
+
+<div class="url-grid">
+
+${cards}
+
+</div>
+
+${warningHTML}
+
+<div class="recommend-box">
+
+<h3>
+
+Khuyến nghị
+
+</h3>
+
+<p>
+
+${recommendation}
+
+</p>
+
+</div>
+
+`; 
+        }
+        function showURLMessage(type,msg){
+
+const result=document.getElementById("urlResult");
+
+result.style.display="block";
+
+let icon="circle-info";
+
+let color="#00bfff";
+
+if(type==="warning"){
+
+icon="triangle-exclamation";
+
+color="#ffb020";
+
+}
+
+if(type==="danger"){
+
+icon="circle-xmark";
+
+color="#ff4d4d";
+
+}
+
+result.innerHTML=`
+
+<div style="
+
+padding:30px;
+
+text-align:center;
+
+">
+
+<i
+
+class="fa-solid fa-${icon}"
+
+style="
+
+font-size:55px;
+
+color:${color};
+
+">
+
+</i>
+
+<p
+
+style="
+
+margin-top:15px;
+
+">
+
+${msg}
+
+</p>
+
+</div>
+
+`;
+
+}
     </script>
 </body>
 </html>
