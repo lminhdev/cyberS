@@ -1166,6 +1166,273 @@ riskScore = Math.min(riskScore,100);
                 alert('Đã sao chép mật khẩu an toàn vào khay nhớ tạm!');
             }
         }
+        async function checkURL(){
+
+    const input=document.getElementById("urlInput");
+    const result=document.getElementById("urlResult");
+
+    let url=input.value.trim();
+
+    if(url===""){
+
+        showURLMessage(
+            "warning",
+            "Vui lòng nhập URL."
+        );
+
+        return;
+
+    }
+
+    if(!/^https?:\/\//i.test(url))
+        url="https://"+url;
+
+    let parsed;
+
+    try{
+
+        parsed=new URL(url);
+
+    }catch{
+
+        showURLMessage(
+            "danger",
+            "URL không hợp lệ."
+        );
+
+        return;
+
+    }
+
+    result.style.display="block";
+
+    result.innerHTML=`
+
+    <div style="text-align:center;padding:40px">
+
+        <i class="fa-solid fa-spinner fa-spin"
+        style="font-size:45px;color:var(--primary-cyan)"></i>
+
+        <p style="margin-top:15px">
+
+        Đang phân tích URL...
+
+        </p>
+
+    </div>
+
+    `;
+
+    await new Promise(r=>setTimeout(r,700));
+
+    analyseURL(parsed);
+
+}
+        function analyseURL(url){
+
+    let score=100;
+
+    const warnings=[];
+
+    const host=url.hostname;
+
+    const protocol=url.protocol;
+
+    const pathname=url.pathname;
+
+    const full=url.href;
+
+    const report=[];
+                let https=true;
+
+    if(protocol!=="https:"){
+
+        https=false;
+
+        score-=25;
+
+        warnings.push("Website không sử dụng HTTPS.");
+
+    }
+
+    report.push({
+
+        title:"HTTPS",
+
+        value:https?"Có":"Không",
+
+        status:https
+
+    });
+                const ipRegex=/^(25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})(\.(25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})){3}$/;
+
+    const isIP=ipRegex.test(host);
+
+    if(isIP){
+
+        score-=20;
+
+        warnings.push("URL sử dụng địa chỉ IP thay vì tên miền.");
+
+    }
+
+    report.push({
+
+        title:"Địa chỉ IP",
+
+        value:isIP?"Có":"Không",
+
+        status:!isIP
+
+    });
+                if(full.includes("@")){
+
+        score-=25;
+
+        warnings.push("URL chứa ký tự @.");
+
+    }
+
+    report.push({
+
+        title:"Ký tự @",
+
+        value:full.includes("@")?"Có":"Không",
+
+        status:!full.includes("@")
+
+    });
+                const unusualPort=
+
+        url.port!=="" &&
+
+        !["80","443"].includes(url.port);
+
+    if(unusualPort){
+
+        score-=10;
+
+        warnings.push("URL sử dụng cổng bất thường.");
+
+    }
+
+    report.push({
+
+        title:"Port",
+
+        value:url.port||"Mặc định",
+
+        status:!unusualPort
+
+    });
+                const unicode=/[^\u0000-\u007f]/.test(host);
+
+    if(unicode){
+
+        score-=20;
+
+        warnings.push("Tên miền chứa Unicode.");
+
+    }
+
+    report.push({
+
+        title:"Unicode",
+
+        value:unicode?"Có":"Không",
+
+        status:!unicode
+
+    });
+                if(host.length>35){
+
+        score-=10;
+
+        warnings.push("Tên miền quá dài.");
+
+    }
+
+    report.push({
+
+        title:"Độ dài Domain",
+
+        value:host.length+" ký tự",
+
+        status:host.length<=35
+
+    });
+                const dash=(host.match(/-/g)||[]).length;
+
+    if(dash>=3){
+
+        score-=10;
+
+        warnings.push("Tên miền chứa quá nhiều dấu '-'.");
+
+    }
+
+    report.push({
+
+        title:"Dấu -",
+
+        value:dash,
+
+        status:dash<3
+
+    });
+                const keywords=[
+
+        "login",
+
+        "verify",
+
+        "secure",
+
+        "update",
+
+        "wallet",
+
+        "bank",
+
+        "gift",
+
+        "bonus",
+
+        "account"
+
+    ];
+
+    const found=[];
+
+    keywords.forEach(k=>{
+
+        if(full.toLowerCase().includes(k))
+
+            found.push(k);
+
+    });
+
+    if(found.length){
+
+        score-=found.length*5;
+
+        warnings.push(
+
+            "URL chứa từ khóa: "+found.join(", ")
+
+        );
+
+    }
+
+    report.push({
+
+        title:"Từ khóa",
+
+        value:found.length?found.join(", "):"Không",
+
+        status:found.length===0
+
+    });
     </script>
 </body>
 </html>
