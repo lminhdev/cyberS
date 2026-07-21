@@ -1900,10 +1900,8 @@ function createAttack(){
     countries[Math.floor(Math.random()*countries.length)];
 
     while(from===to){
-
         to =
         countries[Math.floor(Math.random()*countries.length)];
-
     }
 
     const start =
@@ -1932,14 +1930,12 @@ function createAttack(){
     scene.add(line);
 
     setTimeout(()=>{
-
         scene.remove(line);
         geometry.dispose();
         material.dispose();
-
     },2000);
-    setInterval(createAttack,500);
 }
+    setInterval(createAttack,500);
 /* ===== CLOUD ===== */
 
 const cloudGeometry = new THREE.SphereGeometry(
