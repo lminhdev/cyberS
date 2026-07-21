@@ -552,7 +552,7 @@
     </div>
 
     <footer>
-        <p>© CyberShield Personal Suite — Thiết kế dành riêng cho Bạn & Bạn Bè.</p>
+        <p>© CyberShield</p>
         <p style="margin-top: 5px; font-size: 0.8rem; color: rgba(255,255,255,0.3);">
             Dữ liệu hoàn toàn được mã hóa & xử lý tại Trình duyệt cục bộ (Client-Side Only).
         </p>
@@ -612,7 +612,33 @@
 
         const breaches = data?.ExposedBreaches?.breaches_details || [];
         const exposedData = data?.ExposedData || [];
-        const riskScore = data?.RiskScore?.risk_score || 0;
+        let riskScore = 0;
+
+if (breaches.length > 0) {
+
+    riskScore += breaches.length * 20;
+
+    breaches.forEach(b => {
+
+        const txt = (b.xposed_data || "").toLowerCase();
+
+        if (txt.includes("password"))
+            riskScore += 25;
+
+        if (txt.includes("email"))
+            riskScore += 10;
+
+        if (txt.includes("phone"))
+            riskScore += 10;
+
+        if (txt.includes("credit"))
+            riskScore += 20;
+
+    });
+
+}
+
+riskScore = Math.min(riskScore,100);
 
         if (breaches.length === 0) {
             resultBox.className = 'result-box safe';
