@@ -2114,6 +2114,152 @@ box.clientHeight
 
 });
         }
+const countries = [
+
+{ name:"Vietnam", lat:16.047, lng:108.206 },
+
+{ name:"Japan", lat:35.689, lng:139.692 },
+
+{ name:"United States", lat:38.897, lng:-77.036 },
+
+{ name:"France", lat:48.856, lng:2.352 },
+
+{ name:"Brazil", lat:-15.793, lng:-47.882 }
+
+];
+function latLngToVector3(lat,lng,r){
+
+const phi=(90-lat)*Math.PI/180;
+
+const theta=(lng+180)*Math.PI/180;
+
+return new THREE.Vector3(
+
+-r*Math.sin(phi)*Math.cos(theta),
+
+r*Math.cos(phi),
+
+r*Math.sin(phi)*Math.sin(theta)
+
+);
+
+}
+countries.forEach(country=>{
+
+const pos=
+
+latLngToVector3(
+
+country.lat,
+
+country.lng,
+
+1.01
+
+);
+
+const marker=
+
+new THREE.Mesh(
+
+new THREE.SphereGeometry(0.006),
+
+new THREE.MeshBasicMaterial({
+
+color:0x00ffff
+
+})
+
+);
+
+marker.position.copy(pos);
+
+scene.add(marker);
+
+});
+const from=
+
+countries[Math.floor(Math.random()*countries.length)];
+
+let to=
+
+countries[Math.floor(Math.random()*countries.length)];
+
+while(from===to){
+
+to=
+
+countries[Math.floor(Math.random()*countries.length)];
+
+}
+const start=
+
+latLngToVector3(
+
+from.lat,
+
+from.lng,
+
+1.01
+
+);
+
+const end=
+
+latLngToVector3(
+
+to.lat,
+
+to.lng,
+
+1.01
+
+);
+const geometry=
+
+new THREE.BufferGeometry()
+
+.setFromPoints([
+
+start,
+
+end
+
+]);
+
+const material=
+
+new THREE.LineBasicMaterial({
+
+color:0xff3333
+
+});
+
+const line=
+
+new THREE.Line(
+
+geometry,
+
+material
+
+);
+
+scene.add(line);
+setTimeout(()=>{
+
+scene.remove(line);
+
+geometry.dispose();
+
+material.dispose();
+
+},2000);
+setInterval(()=>{
+
+createAttack();
+
+},300);
     </script>
 </body>
 </html>
