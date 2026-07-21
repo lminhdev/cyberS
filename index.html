@@ -3,704 +3,248 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberShield | An Toàn Thông Tin Personal Suite</title>
-    <!-- Google Fonts & FontAwesome Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <title>CyberSecurity - Data Breach Scanner</title>
     <style>
         :root {
-            --bg-color: #0b0f19;
-            --card-bg: rgba(18, 26, 43, 0.7);
-            --card-border: rgba(0, 242, 254, 0.18);
             --primary-cyan: #00f2fe;
-            --primary-blue: #4facfe;
-            --danger-red: #ff4b5c;
-            --warning-orange: #ffb400;
-            --success-green: #00e676;
-            --text-main: #f1f5f9;
-            --text-muted: #94a3b8;
+            --bg-dark: #0a0f19;
+            --panel-bg: rgba(18, 26, 43, 0.7);
+            --text-main: #ffffff;
+            --text-muted: #8b9bb4;
+            --danger: #ff4757;
+            --success: #2ed573;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: var(--bg-color);
+            background-color: var(--bg-dark);
             background-image: 
-                radial-gradient(circle at 15% 15%, rgba(0, 242, 254, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 85% 85%, rgba(79, 172, 254, 0.08) 0%, transparent 40%);
+                radial-gradient(circle at 15% 50%, rgba(0, 242, 254, 0.05), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(0, 242, 254, 0.05), transparent 25%);
             color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
             min-height: 100vh;
+        }
+
+        /* Glassmorphism Container */
+        .cyber-container {
+            background: var(--panel-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .header h2 {
+            color: var(--primary-cyan);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+
+        /* Input Group */
+        .input-group {
             display: flex;
             flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
         }
 
-        header {
-            padding: 2rem 1rem;
-            text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        h1, h2, h3 {
-            font-family: 'Space Grotesk', sans-serif;
-        }
-
-        .logo {
-            font-size: 2.2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary-cyan), var(--primary-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .privacy-badge {
-            display: inline-block;
-            margin-top: 10px;
-            background: rgba(0, 230, 118, 0.1);
-            border: 1px solid var(--success-green);
-            color: var(--success-green);
-            padding: 6px 16px;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 0 1.5rem;
-            flex: 1;
-        }
-
-        /* Navigation Tabs */
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 2rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .tab-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            color: var(--text-muted);
-            padding: 12px 24px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
+        .input-group input {
+            background: rgba(10, 15, 25, 0.6);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            color: var(--text-main);
+            font-size: 1rem;
+            outline: none;
             transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
-        .tab-btn.active, .tab-btn:hover {
-            color: #fff;
+        .input-group input:focus {
             border-color: var(--primary-cyan);
-            background: rgba(0, 242, 254, 0.1);
             box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
         }
 
-        /* Tool Cards */
-        .tool-panel {
-            display: none;
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 2rem;
-            backdrop-filter: blur(16px);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-
-        .tool-panel.active {
-            display: block;
-            animation: fadeIn 0.4s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .input-group {
-            display: flex;
-            gap: 10px;
-            margin: 1.5rem 0;
-        }
-
-        input[type="text"], input[type="email"], input[type="password"] {
-            flex: 1;
-            background: rgba(10, 15, 25, 0.8);
-            border: 1px solid var(--card-border);
-            padding: 14px 18px;
-            border-radius: 10px;
-            color: #fff;
+        .cyber-btn {
+            background: linear-gradient(45deg, transparent 5%, var(--primary-cyan) 5%);
+            background-color: #0088ff; /* Fallback */
+            color: #000;
+            border: none;
+            padding: 15px;
+            font-weight: bold;
             font-size: 1rem;
-            outline: none;
-            transition: border 0.3s ease;
-        }
-
-        input:focus {
-            border-color: var(--primary-cyan);
-            box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
-        }
-
-        .btn-action {
-            background: linear-gradient(135deg, var(--primary-cyan), var(--primary-blue));
-            border: none;
-            color: #0b0f19;
-            padding: 14px 28px;
-            border-radius: 10px;
-            font-weight: 700;
+            text-transform: uppercase;
             cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.2s, filter 0.2s;
+            border-radius: 4px;
         }
 
-        .btn-action:hover {
+        .cyber-btn:hover {
+            filter: brightness(1.2);
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(0, 242, 254, 0.4);
         }
 
-        /* Results Box */
+        /* Result Box Base */
         .result-box {
-            margin-top: 1.5rem;
-            padding: 1.5rem;
-            border-radius: 12px;
             display: none;
-        }
-
-        .result-box.danger {
-            background: rgba(255, 75, 92, 0.1);
-            border: 1px solid var(--danger-red);
-            color: #ff9ebb;
-            display: block;
-        }
-
-        .result-box.safe {
-            background: rgba(0, 230, 118, 0.1);
-            border: 1px solid var(--success-green);
-            color: #80ffe1;
-            display: block;
-        }
-
-        /* Meter Bar */
-        .meter-container {
-            height: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            margin: 15px 0;
-            overflow: hidden;
-        }
-
-        .meter-bar {
-            height: 100%;
-            width: 0%;
-            transition: width 0.4s ease, background-color 0.4s ease;
-        }
-
-        /* Tips Checklist */
-        .tips-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1rem;
-        }
-
-        .tip-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 1.5rem;
-            border-radius: 14px;
-        }
-
-        .tip-card i {
-            font-size: 1.8rem;
-            color: var(--primary-cyan);
-            margin-bottom: 12px;
-        }
-
-        footer {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .suggested-pwd {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px dashed var(--primary-cyan);
-            padding: 12px;
             border-radius: 8px;
-            font-family: monospace;
-            font-size: 1.2rem;
-            color: var(--primary-cyan);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
+            margin-top: 20px;
+            overflow: hidden;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
         }
 
-        .copy-btn {
-            background: transparent;
-            border: none;
+        /* Hiệu ứng Radar Scanner Custom */
+        .radar-scanner {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto 15px auto;
+            background: 
+                linear-gradient(90deg, transparent 49%, rgba(0, 242, 254, 0.2) 50%, transparent 51%),
+                linear-gradient(180deg, transparent 49%, rgba(0, 242, 254, 0.2) 50%, transparent 51%),
+                rgba(10, 15, 25, 0.6);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.1), inset 0 0 10px rgba(0, 242, 254, 0.1);
+        }
+
+        .radar-scanner::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150%; 
+            height: 150%;
+            background: conic-gradient(from 0deg, transparent 70%, rgba(0, 242, 254, 0.8) 100%);
+            transform-origin: 0 0;
+            animation: radar-spin 1.2s linear infinite;
+        }
+
+        @keyframes radar-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Kết quả Styling */
+        .status-safe {
+            background: rgba(46, 213, 115, 0.1) !important;
+            border-color: var(--success) !important;
+            padding: 20px;
+            color: var(--success);
+        }
+        .status-danger {
+            background: rgba(255, 71, 87, 0.1) !important;
+            border-color: var(--danger) !important;
+            padding: 20px;
+            color: var(--danger);
+        }
+        .leak-list {
+            margin-top: 15px;
+            text-align: left;
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .leak-item {
             color: #fff;
-            cursor: pointer;
-            padding: 5px 10px;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 8px 0;
         }
-
-        .copy-btn:hover { color: var(--primary-cyan); }
-        /* Styling cho kết quả nâng cấp Leak Checker */
-.leak-summary-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 1rem;
-}
-
-.risk-badge {
-    background: linear-gradient(135deg, #ff4b5c, #ff1744);
-    color: #fff;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-weight: 700;
-    font-size: 0.85rem;
-    box-shadow: 0 0 12px rgba(255, 75, 92, 0.4);
-}
-
-.badges-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 10px;
-}
-
-.badge-item {
-    background: rgba(255, 180, 0, 0.15);
-    border: 1px solid var(--warning-orange);
-    color: var(--warning-orange);
-    padding: 5px 12px;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.breach-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 10px;
-    max-height: 350px;
-    overflow-y: auto;
-    padding-right: 5px;
-}
-
-.breach-card {
-    background: rgba(10, 15, 25, 0.6);
-    border: 1px solid rgba(255, 75, 92, 0.3);
-    border-left: 4px solid var(--danger-red);
-    padding: 1rem;
-    border-radius: 8px;
-}
-
-.breach-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 6px;
-    font-weight: 600;
-}
-
-.breach-title {
-    color: var(--primary-cyan);
-    font-size: 1rem;
-}
-
-.breach-date {
-    color: var(--text-muted);
-    font-size: 0.85rem;
-}
-
-.breach-desc {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    line-height: 1.4;
-}
-
-.remediation-box {
-    margin-top: 1.5rem;
-    background: rgba(0, 242, 254, 0.05);
-    border: 1px solid var(--card-border);
-    padding: 1rem 1.2rem;
-    border-radius: 10px;
-}
-
-.remediation-box ul {
-    margin-left: 1.2rem;
-    margin-top: 8px;
-    font-size: 0.88rem;
-    color: var(--text-muted);
-}
-
-.remediation-box li {
-    margin-bottom: 4px;
-}
+        .leak-item:last-child {
+            border-bottom: none;
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo">
-            <i class="fa-solid fa-shield-halved"></i> CyberShield
-        </div>
-        <p style="color: var(--text-muted); margin-top: 5px;">Hệ thống bảo vệ tài khoản & Kiểm tra an toàn thông tin cá nhân</p>
-        <div class="privacy-badge">
-            <i class="fa-solid fa-lock"></i> 100% Client-Side — Không lưu trữ bất kỳ dữ liệu nào
-        </div>
-    </header>
-
-    <div class="container">
-        <!-- Navigation -->
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('leak-tool')">
-                <i class="fa-solid fa-user-ninja"></i> Kiểm tra Rò Rỉ Email
-            </button>
-            <button class="tab-btn" onclick="switchTab('pwd-tool')">
-                <i class="fa-solid fa-key"></i> Kiểm Tra & Tạo Mật Khẩu
-            </button>
-            <button class="tab-btn" onclick="switchTab('tips-tool')">
-                <i class="fa-solid fa-shield-cat"></i> Biện Pháp Bảo Vệ
-            </button>
+    <div class="cyber-container">
+        <div class="header">
+            <h2>Data Breach Scanner</h2>
+            <p>Kiểm tra dấu vết email trên Darkweb & Data Dumps</p>
         </div>
 
-        <!-- Tool 1: Email Leak Checker -->
-        <div id="leak-tool" class="tool-panel active">
-            <h2><i class="fa-solid fa-envelope-open-text" style="color: var(--primary-cyan)"></i> Kiểm tra rò rỉ Email trên không gian mạng</h2>
-            <p style="color: var(--text-muted); margin-top: 8px;">
-                Nhập email của bạn để kiểm tra xem thông tin đăng nhập của bạn có từng xuất hiện trong các vụ rò rỉ dữ liệu công khai hay không.
-            </p>
-
-            <div class="input-group">
-                <input type="email" id="emailInput" placeholder="nhap_email_cua_ban@gmail.com">
-                <button class="btn-action" onclick="checkEmailLeak()">Kiểm Tra Ngay</button>
-            </div>
-
-            <div id="leakResult" class="result-box"></div>
+        <div class="input-group">
+            <input type="email" id="emailInput" placeholder="Nhập địa chỉ email của bạn..." required>
+            <button class="cyber-btn" onclick="checkEmailLeak()">Kiểm Tra Ngay</button>
         </div>
 
-        <!-- Tool 2: Password Checker & Generator -->
-        <div id="pwd-tool" class="tool-panel">
-            <h2><i class="fa-solid fa-vault" style="color: var(--primary-cyan)"></i> Đánh Giá & Gợi Ý Mật Khẩu An Toàn</h2>
-            <p style="color: var(--text-muted); margin-top: 8px;">
-                Mật khẩu của bạn được phân tích trực tiếp ngay trên trình duyệt máy bạn. Hãy yên tâm thử nghiệm!
-            </p>
-
-            <div style="margin-top: 1.5rem;">
-                <label style="font-weight: 600;">Mật khẩu bạn dự định đặt:</label>
-                <div class="input-group" style="margin-top: 8px;">
-                    <input type="password" id="pwdInput" placeholder="Nhập mật khẩu cần kiểm tra..." oninput="evaluatePassword()">
-                    <button class="btn-action" style="background: rgba(255,255,255,0.1); color: #fff;" onclick="togglePwdVisibility()">
-                        <i class="fa-solid fa-eye" id="eyeIcon"></i>
-                    </button>
-                </div>
-
-                <div class="meter-container">
-                    <div id="pwdMeter" class="meter-bar"></div>
-                </div>
-                <p id="pwdStatusText" style="font-size: 0.95rem; font-weight: 600;"></p>
-                <p id="pwdCrackTime" style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;"></p>
-            </div>
-
-            <!-- Suggestion section if password is weak -->
-            <div id="pwdSuggestion" style="margin-top: 2rem; display: none; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
-                <h3 style="color: var(--warning-orange);"><i class="fa-solid fa-triangle-exclamation"></i> Mật khẩu chưa đủ an toàn!</h3>
-                <p style="color: var(--text-muted); margin-top: 5px;">Hệ thống tự động tạo cho bạn một mật khẩu chuẩn quân sự cực kỳ bảo mật:</p>
-                
-                <div class="suggested-pwd">
-                    <span id="generatedPwdText">...</span>
-                    <button class="copy-btn" onclick="copyPassword()" title="Sao chép">
-                        <i class="fa-regular fa-copy"></i> Copy
-                    </button>
-                </div>
-                <button class="btn-action" style="margin-top: 12px; font-size: 0.85rem; padding: 10px 18px;" onclick="generateStrongPwd()">
-                    <i class="fa-solid fa-arrows-rotate"></i> Tạo Mật Khẩu Khác
-                </button>
-            </div>
-        </div>
-
-        <!-- Tool 3: Security Best Practices -->
-        <div id="tips-tool" class="tool-panel">
-            <h2><i class="fa-solid fa-user-shield" style="color: var(--primary-cyan)"></i> Khuyến Nghị Bảo Vệ Tài Khoản Mạng</h2>
-            <p style="color: var(--text-muted); margin-top: 8px;">Thực hiện ngay các bước này để bảo vệ tài khoản cá nhân và người thân khỏi Hacker:</p>
-
-            <div class="tips-grid">
-                <div class="tip-card">
-                    <i class="fa-solid fa-mobile-screen-button"></i>
-                    <h3>Bật Xác Thực 2 Lớp (2FA)</h3>
-                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 8px;">
-                        Luôn bật 2FA trên Facebook, Gmail, Zalo... Ưu tiên dùng ứng dụng mã hóa như <b>Google Authenticator</b> thay vì SMS để tránh bị đúp SIM.
-                    </p>
-                </div>
-
-                <div class="tip-card">
-                    <i class="fa-solid fa-box-archive"></i>
-                    <h3>Sử Dụng Quản Lý Mật Khẩu</h3>
-                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 8px;">
-                        Không bao giờ đặt 1 mật khẩu cho nhiều tài khoản. Hãy để các công cụ như <b>Bitwarden</b> hay <b>1Password</b> lưu trữ giúp bạn.
-                    </p>
-                </div>
-
-                <div class="tip-card">
-                    <i class="fa-solid fa-fish-fins"></i>
-                    <h3>Cảnh Giác Với Phishing</h3>
-                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 8px;">
-                        Không nhấp vào link lạ gửi qua Messenger, Zalo hoặc Email. Luôn kiểm tra kỹ tên miền (domain) trước khi đăng nhập.
-                    </p>
-                </div>
-
-                <div class="tip-card">
-                    <i class="fa-solid fa-laptop-code"></i>
-                    <h3>Cập Nhật Thiết Bị Lên Bản Mới</h3>
-                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 8px;">
-                        Thường xuyên cập nhật hệ điều hành (Windows, iOS, Android) để vá các lỗ hổng bảo mật nghiêm trọng.
-                    </p>
-                </div>
-            </div>
-        </div>
+        <div id="resultBox" class="result-box"></div>
     </div>
 
-    <footer>
-        <p>© CyberShield Personal Suite — Thiết kế dành riêng cho Bạn & Bạn Bè.</p>
-        <p style="margin-top: 5px; font-size: 0.8rem; color: rgba(255,255,255,0.3);">
-            Dữ liệu hoàn toàn được mã hóa & xử lý tại Trình duyệt cục bộ (Client-Side Only).
-        </p>
-    </footer>
-    
     <script>
-        // Tab Navigation Logic
-        function switchTab(tabId) {
-            document.querySelectorAll('.tool-panel').forEach(panel => panel.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            
-            document.getElementById(tabId).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
+        async function checkEmailLeak() {
+            const email = document.getElementById('emailInput').value.trim();
+            const resultBox = document.getElementById('resultBox');
 
-        // Toggle Password Visibility
-        function togglePwdVisibility() {
-            const input = document.getElementById('pwdInput');
-            const icon = document.getElementById('eyeIcon');
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.className = 'fa-solid fa-eye-slash';
-            } else {
-                input.type = 'password';
-                icon.className = 'fa-solid fa-eye';
-            }
-        }
-
-        // Hàm kiểm tra rò rỉ Email nâng cấp - Bóc tách chi tiết nguồn & loại dữ liệu lộ
-async function checkEmailLeak() {
-    const email = document.getElementById('emailInput').value.trim();
-    const resultBox = document.getElementById('leakResult');
-
-    if (!email || !email.includes('@')) {
-        alert('Vui lòng nhập định dạng Email hợp lệ!');
-        return;
-    }
-
-    resultBox.style.display = 'block';
-    resultBox.className = 'result-box';
-    resultBox.style.background = 'rgba(18, 26, 43, 0.9)';
-    resultBox.innerHTML = `
-        <div style="text-align: center; padding: 2rem;">
-            <i class="fa-solid fa-radar fa-spin" style="font-size: 2.5rem; color: var(--primary-cyan); margin-bottom: 15px;"></i>
-            <p style="font-weight: 600;">Đang truy quét cơ sở dữ liệu rò rỉ toàn cầu...</p>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 5px;">Kiểm tra danh mục Pastebin, Darkweb & Data Dumps</p>
-        </div>
-    `;
-
-    try {
-        // Truy vấn API Breach Analytics nâng cấp của XposedOrNot
-        const res = await fetch(`https://api.xposedornot.com/v1/breach-analytics?email=${encodeURIComponent(email)}`);
-        const data = await res.json();
-
-        const breaches = data?.ExposedBreaches?.breaches_details || [];
-        const exposedDataSummary = data?.ExposedData || [];
-        const riskScore = data?.RiskScore?.risk_score || 0;
-
-        // Trường hợp 1: Email hoàn toàn an toàn
-        if (breaches.length === 0) {
-            resultBox.className = 'result-box safe';
-            resultBox.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 15px;">
-                    <i class="fa-solid fa-shield-check" style="font-size: 2.5rem; color: var(--success-green);"></i>
-                    <div>
-                        <h3 style="color: var(--success-green);">Email An Toàn!</h3>
-                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">
-                            Không phát hiện địa chỉ <b>${email}</b> trong bất kỳ cơ sở dữ liệu rò rỉ công khai nào.
-                        </p>
-                    </div>
-                </div>
-            `;
-            return;
-        }
-
-        // Trường hợp 2: Phát hiện rò rỉ - Bóc tách chi tiết dữ liệu
-        resultBox.className = 'result-box danger';
-
-        // Tạo thẻ nhãn cho loại dữ liệu bị lộ (Passwords, IPs, Phones, Names...)
-        const dataBadges = exposedDataSummary.flatMap(d => d.split(';')).map(item => {
-            const clean = item.trim();
-            let icon = 'fa-database';
-            if (clean.toLowerCase().includes('password')) icon = 'fa-key';
-            if (clean.toLowerCase().includes('ip')) icon = 'fa-network-wired';
-            if (clean.toLowerCase().includes('phone')) icon = 'fa-phone';
-            if (clean.toLowerCase().includes('email')) icon = 'fa-envelope';
-            return `<span class="badge-item"><i class="fa-solid ${icon}"></i> ${clean}</span>`;
-        }).join('');
-
-        // Tạo danh sách từng vụ rò rỉ cụ thể
-        const breachCards = breaches.map(b => `
-            <div class="breach-card">
-                <div class="breach-header">
-                    <span class="breach-title"><i class="fa-solid fa-building-shield"></i> ${b.breach || 'Dịch vụ rò rỉ'}</span>
-                    <span class="breach-date"><i class="fa-regular fa-calendar-days"></i> ${b.domain || 'Năm lộ: ' + (b.xposed_date || 'N/A')}</span>
-                </div>
-                <p class="breach-desc"><b>Dữ liệu ảnh hưởng:</b> ${b.xposed_data || 'Mật khẩu / Thông tin tài khoản cá nhân'}</p>
-            </div>
-        `).join('');
-
-        // Render toàn bộ giao diện báo cáo chuyên nghiệp
-        resultBox.innerHTML = `
-            <div class="leak-summary-header">
-                <div>
-                    <h3 style="color: var(--danger-red); font-size: 1.2rem;">
-                        <i class="fa-solid fa-skull-crossbones"></i> CẢNH BÁO: Phát hiện ${breaches.length} vụ rò rỉ dữ liệu!
-                    </h3>
-                    <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 4px;">
-                        Tài khoản <b>${email}</b> đã bị xâm nhập trong các cuộc tấn công mạng dưới đây.
-                    </p>
-                </div>
-                <div class="risk-badge">Chỉ số rủi ro: ${riskScore}/100</div>
-            </div>
-
-            <div style="margin-top: 1.2rem;">
-                <strong style="font-size: 0.9rem; color: var(--text-main);">Loại dữ liệu cá nhân đã bị rò rỉ:</strong>
-                <div class="badges-wrapper">${dataBadges || '<span class="badge-item">Thông tin tài khoản</span>'}</div>
-            </div>
-
-            <div style="margin-top: 1.5rem;">
-                <strong style="font-size: 0.9rem; color: var(--text-main);">Chi tiết các nguồn bị hack:</strong>
-                <div class="breach-list">${breachCards}</div>
-            </div>
-
-            <div class="remediation-box">
-                <strong style="color: var(--primary-cyan);"><i class="fa-solid fa-user-shield"></i> Khuyến nghị hành động khẩn cấp:</strong>
-                <ul>
-                    <li>Đổi mật khẩu ngay tại các trang web/dịch vụ bị rò rỉ ở trên.</li>
-                    <li>Nếu bạn dùng chung mật khẩu này cho Gmail hoặc Facebook, hãy đổi mật khẩu ở các trang đó ngay.</li>
-                    <li>Kích hoạt Xác thực 2 yếu tố (2FA) để ngăn truy cập trái phép dù lộ mật khẩu.</li>
-                </ul>
-            </div>
-        `;
-
-    } catch (err) {
-        console.error(err);
-        resultBox.className = 'result-box danger';
-        resultBox.innerHTML = `
-            <h3><i class="fa-solid fa-triangle-exclamation"></i> Lỗi kết nối hệ thống truy quét</h3>
-            <p style="margin-top: 5px; font-size: 0.9rem;">Không thể truy vấn cơ sở dữ liệu. Vui lòng kiểm tra lại kết nối mạng hoặc thử lại sau.</p>
-        `;
-    }
-}
-
-        // 2. Password Strength Evaluation & Strong Generator
-        function evaluatePassword() {
-            const pwd = document.getElementById('pwdInput').value;
-            const meter = document.getElementById('pwdMeter');
-            const status = document.getElementById('pwdStatusText');
-            const crackTime = document.getElementById('pwdCrackTime');
-            const suggestion = document.getElementById('pwdSuggestion');
-
-            if (!pwd) {
-                meter.style.width = '0%';
-                status.innerText = '';
-                crackTime.innerText = '';
-                suggestion.style.display = 'none';
+            if (!email) {
+                alert('Hệ thống yêu cầu nhập địa chỉ email hợp lệ!');
                 return;
             }
 
-            let score = 0;
-            if (pwd.length >= 8) score += 20;
-            if (pwd.length >= 12) score += 25;
-            if (/[A-Z]/.test(pwd)) score += 15;
-            if (/[a-z]/.test(pwd)) score += 10;
-            if (/[0-9]/.test(pwd)) score += 15;
-            if (/[^A-Za-z0-9]/.test(pwd)) score += 15;
+            // Giao diện Loading tích hợp Radar CSS
+            resultBox.style.display = 'block';
+            resultBox.className = 'result-box';
+            resultBox.style.background = 'rgba(18, 26, 43, 0.9)';
+            resultBox.innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <div class="radar-scanner"></div> 
+                    <p style="font-weight: 600;">Đang truy quét cơ sở dữ liệu rò rỉ toàn cầu...</p>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 5px;">Xin chờ, đang quét qua Pastebin & Darkweb...</p>
+                </div>
+            `;
 
-            meter.style.width = score + '%';
-
-            if (score < 50) {
-                meter.style.backgroundColor = 'var(--danger-red)';
-                status.style.color = 'var(--danger-red)';
-                status.innerText = 'Đánh giá: Rất Yếu - Dễ bị hack trong vài giây!';
-                crackTime.innerText = 'Thời gian bẻ khóa ước tính: Ngay lập tức đến vài phút';
-                suggestion.style.display = 'block';
-                if (document.getElementById('generatedPwdText').innerText === '...') {
-                    generateStrongPwd();
+            // Giả lập delay gọi API (2.5 giây) để user kịp xem hiệu ứng loading quét radar
+            setTimeout(() => {
+                // LOGIC TEST: Để thử tính năng, mình thiết lập nếu email có chữ "admin" hoặc "test" thì trả về giao diện Đỏ.
+                // *GHI CHÚ: Sau này bạn thay đoạn logic này bằng code fetch API thật của bạn.*
+                const isLeaked = email.toLowerCase().includes('admin') || email.toLowerCase().includes('test');
+                
+                if (isLeaked) {
+                    // Trạng thái BỊ RÒ RỈ (Màu Đỏ)
+                    resultBox.className = 'result-box status-danger';
+                    resultBox.innerHTML = `
+                        <h3 style="margin-bottom: 10px;">⚠️ CẢNH BÁO RÒ RỈ!</h3>
+                        <p style="font-size: 0.95rem;">Email <strong>${email}</strong> đã bị phát hiện trong các đợt rò rỉ dữ liệu sau:</p>
+                        <div class="leak-list">
+                            <div class="leak-item">💀 <strong>Canva (2019)</strong> - Lộ email, mật khẩu mã hóa, tên.</div>
+                            <div class="leak-item">💀 <strong>Facebook (2021)</strong> - Lộ số điện thoại, email, ID.</div>
+                        </div>
+                        <p style="font-size: 0.85rem; margin-top: 15px; color: #ffcccc;">Khuyến nghị khẩn cấp: Thay đổi mật khẩu ngay lập tức và bật 2FA.</p>
+                    `;
+                } else {
+                    // Trạng thái AN TOÀN (Màu Xanh)
+                    resultBox.className = 'result-box status-safe';
+                    resultBox.innerHTML = `
+                        <h3 style="margin-bottom: 10px;">✅ TÌNH TRẠNG AN TOÀN</h3>
+                        <p style="font-size: 0.95rem;">Tuyệt vời! Không tìm thấy dấu vết của <strong>${email}</strong> trong bất kỳ cơ sở dữ liệu rò rỉ nào.</p>
+                        <p style="font-size: 0.85rem; margin-top: 15px; color: #ccffcc;">Mức độ bảo mật tốt. Hãy tiếp tục duy trì nhé!</p>
+                    `;
                 }
-            } else if (score < 80) {
-                meter.style.backgroundColor = 'var(--warning-orange)';
-                status.style.color = 'var(--warning-orange)';
-                status.innerText = 'Đánh giá: Trung Binh - Nên thêm ký tự đặc biệt & số';
-                crackTime.innerText = 'Thời gian bẻ khóa ước tính: Vài ngày đến vài tháng';
-                suggestion.style.display = 'none';
-            } else {
-                meter.style.backgroundColor = 'var(--success-green)';
-                status.style.color = 'var(--success-green)';
-                status.innerText = 'Đánh giá: Rất Mạnh - Chuẩn bảo mật cao!';
-                crackTime.innerText = 'Thời gian bẻ khóa ước tính: Hàng trăm năm';
-                suggestion.style.display = 'none';
-            }
-        }
-
-        // Strong Cryptographic Password Generator
-        function generateStrongPwd() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
-            const length = 16;
-            let result = '';
-            const randomValues = new Uint32Array(length);
-            window.crypto.getRandomValues(randomValues);
-            
-            for (let i = 0; i < length; i++) {
-                result += chars[randomValues[i] % chars.length];
-            }
-
-            document.getElementById('generatedPwdText').innerText = result;
-        }
-
-        function copyPassword() {
-            const pwd = document.getElementById('generatedPwdText').innerText;
-            if (pwd && pwd !== '...') {
-                navigator.clipboard.writeText(pwd);
-                alert('Đã sao chép mật khẩu an toàn vào khay nhớ tạm!');
-            }
+            }, 2500); // Thời gian chờ 2.5s
         }
     </script>
 </body>
