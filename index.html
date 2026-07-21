@@ -1891,89 +1891,55 @@ countries.forEach(c=>{
     scene.add(marker);
 
 });
-const from=
+function createAttack(){
 
-countries[Math.floor(Math.random()*countries.length)];
+    const from =
+    countries[Math.floor(Math.random()*countries.length)];
 
-let to=
+    let to =
+    countries[Math.floor(Math.random()*countries.length)];
 
-countries[Math.floor(Math.random()*countries.length)];
+    while(from===to){
 
-while(from===to){
+        to =
+        countries[Math.floor(Math.random()*countries.length)];
 
-to=
+    }
 
-countries[Math.floor(Math.random()*countries.length)];
+    const start =
+    latLngToVector3(from.lat,from.lng,1.01);
+
+    const end =
+    latLngToVector3(to.lat,to.lng,1.01);
+
+    const geometry =
+    new THREE.BufferGeometry().setFromPoints([
+        start,
+        end
+    ]);
+
+    const material =
+    new THREE.LineBasicMaterial({
+        color:0xff3333
+    });
+
+    const line =
+    new THREE.Line(
+        geometry,
+        material
+    );
+
+    scene.add(line);
+
+    setTimeout(()=>{
+
+        scene.remove(line);
+        geometry.dispose();
+        material.dispose();
+
+    },2000);
 
 }
-const start=
-
-latLngToVector3(
-
-from.lat,
-
-from.lng,
-
-1.01
-
-);
-
-const end=
-
-latLngToVector3(
-
-to.lat,
-
-to.lng,
-
-1.01
-
-);
-const geometry=
-
-new THREE.BufferGeometry()
-
-.setFromPoints([
-
-start,
-
-end
-
-]);
-
-const material=
-
-new THREE.LineBasicMaterial({
-
-color:0xff3333
-
-});
-
-const line=
-
-new THREE.Line(
-
-geometry,
-
-material
-
-);
-
-scene.add(line);
-setTimeout(()=>{
-
-scene.remove(line);
-
-geometry.dispose();
-
-material.dispose();
-
-},2000);
-setInterval(()=>{
-
-createAttack();
-
-},300);
 /* ===== CLOUD ===== */
 
 const cloudGeometry = new THREE.SphereGeometry(
@@ -2244,26 +2210,6 @@ r*Math.sin(phi)*Math.sin(theta)
 );
 
 }
-
-const marker=
-
-new THREE.Mesh(
-
-new THREE.SphereGeometry(0.006),
-
-new THREE.MeshBasicMaterial({
-
-color:0x00ffff
-
-})
-
-);
-
-marker.position.copy(pos);
-
-scene.add(marker);
-
-});
 
     </script>
 </body>
