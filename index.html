@@ -656,6 +656,23 @@ margin-top:20px;
 flex-wrap:wrap;
 
 }
+        #globeViz{
+
+width:100%;
+
+height:700px;
+
+border-radius:20px;
+
+overflow:hidden;
+
+margin-top:20px;
+
+background:#050b14;
+
+border:1px solid var(--card-border);
+
+}
     </style>
 </head>
 <body>
@@ -685,6 +702,15 @@ flex-wrap:wrap;
             <button class="tab-btn" onclick="switchTab('tips-tool',event)">
                 <i class="fa-solid fa-shield-cat"></i> Biện Pháp Bảo Vệ Dữ Liệu Trên Không Gian Mạng 
             </button>
+            <button
+class="tab-btn"
+onclick="switchTab('attack-map',event)">
+
+<i class="fa-solid fa-earth-americas"></i>
+
+Tấn công mạng
+
+</button>
         </div>
 
         <div id="leak-tool" class="tool-panel active">
@@ -830,6 +856,31 @@ style="display:none">
                 </div>
             </div>
         </div>
+        <div
+id="attack-map"
+class="tool-panel">
+
+<h2>
+
+<i
+class="fa-solid fa-earth-americas"
+style="color:var(--primary-cyan)">
+</i>
+
+Cyber Attack Map
+
+</h2>
+
+<p
+class="tool-description">
+
+Mô phỏng các cuộc tấn công mạng toàn cầu theo thời gian thực.
+
+</p>
+
+<div id="globeViz"></div>
+
+</div>
     </div>
 
     <footer>
@@ -841,17 +892,33 @@ style="display:none">
 
     <script>
 
-        function switchTab(tabName,event){
-            document.querySelectorAll('.tool-panel').forEach(panel => panel.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            
-            document.getElementById(tabName).classList.add('active');
-            if(event){
+        let attackMapLoaded = false;
 
-event.currentTarget.classList.add("active");
+function switchTab(tabName, event){
+
+    document.querySelectorAll('.tool-panel').forEach(panel=>{
+        panel.classList.remove('active');
+    });
+
+    document.querySelectorAll('.tab-btn').forEach(btn=>{
+        btn.classList.remove('active');
+    });
+
+    document.getElementById(tabName).classList.add('active');
+
+    if(event){
+        event.currentTarget.classList.add("active");
+    }
+
+    if(tabName==="attack-map" && !attackMapLoaded){
+
+        attackMapLoaded = true;
+
+        initAttackMap();
+
+    }
 
 }
-        }
 
         
         function togglePwdVisibility() {
@@ -1676,7 +1743,34 @@ ${msg}
 `;
 
 }
+        let world;
+
+let mapLoaded=false;
+
+function initAttackMap(){
+
+if(mapLoaded) return;
+
+mapLoaded=true;
+
+world=Globe()
+
+(document.getElementById("globeViz"))
+
+.globeImageUrl(
+"https://unpkg.com/three-globe/example/img/earth-dark.jpg"
+)
+
+.bumpImageUrl(
+"https://unpkg.com/three-globe/example/img/earth-topology.png"
+)
+
+.backgroundColor("#0b0f19");
+
+}
         
     </script>
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+<script src="https://unpkg.com/globe.gl"></script>
 </body>
 </html>
