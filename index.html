@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberShield - Security Toolkit</title>
+    <title>CyberShield - Advanced Security Toolkit</title>
     <style>
         :root {
             --primary: #00f2fe;
@@ -39,7 +39,7 @@
 
         .container {
             width: 100%;
-            max-width: 900px;
+            max-width: 950px;
         }
 
         header {
@@ -139,23 +139,32 @@
             box-shadow: 0 4px 15px rgba(0, 242, 254, 0.4);
         }
 
-        /* Leak Checker Result */
+        /* Result Container */
         #leak-result {
             margin-top: 1.5rem;
-            padding: 1rem;
-            border-radius: 8px;
+            padding: 1.25rem;
+            border-radius: 10px;
             display: none;
         }
 
-        .breach-card {
-            background: rgba(0,0,0,0.3);
-            border-left: 4px solid var(--danger);
-            padding: 1rem;
+        .breach-badge-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
             margin-top: 1rem;
-            border-radius: 4px;
         }
 
-        /* Password Generator Options */
+        .breach-badge {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid var(--danger);
+            color: #fca5a5;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Options Grid */
         .options-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -167,16 +176,16 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            cursor: pointer;
+            user-select: none;
         }
 
-        /* Range Slider */
         input[type="range"] {
             width: 100%;
             margin-top: 10px;
             accent-color: var(--primary);
         }
 
-        /* Strength Meter */
         .strength-meter {
             height: 8px;
             background: rgba(255,255,255,0.1);
@@ -202,9 +211,10 @@
             padding: 1rem;
             border-radius: 8px;
             text-align: center;
+            border: 1px solid var(--glass-border);
         }
         .stat-value {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             font-weight: bold;
             color: var(--primary);
             margin-top: 0.5rem;
@@ -213,7 +223,7 @@
         /* Best Practices Grid */
         .bp-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem;
         }
 
@@ -222,7 +232,7 @@
             border: 1px solid var(--glass-border);
             padding: 1.5rem;
             border-radius: 12px;
-            transition: transform 0.3s;
+            transition: transform 0.3s, border-color 0.3s;
         }
 
         .bp-card:hover {
@@ -233,6 +243,13 @@
         .bp-card h3 {
             color: var(--primary);
             margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .bp-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
         }
 
         .loader {
@@ -240,10 +257,10 @@
             border: 3px solid rgba(255,255,255,0.1);
             border-top: 3px solid var(--primary);
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
             animation: spin 1s linear infinite;
-            margin: 0 auto;
+            margin: 1rem auto;
         }
 
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -254,22 +271,22 @@
     <div class="container">
         <header>
             <h1>CyberShield</h1>
-            <p style="color: var(--text-muted)">Advanced Security Toolkit</p>
+            <p style="color: var(--text-muted)">Advanced Security & Intelligence Toolkit</p>
         </header>
 
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('leak')">Email Leak Checker</button>
-            <button class="tab-btn" onclick="switchTab('vault')">Password Vault</button>
-            <button class="tab-btn" onclick="switchTab('best-practices')">Best Practices</button>
+            <button class="tab-btn" onclick="switchTab('vault')">Password Vault & Gen</button>
+            <button class="tab-btn" onclick="switchTab('best-practices')">Security Best Practices</button>
         </div>
 
         <!-- MODULE 1: Leak Checker -->
         <div id="leak" class="module active">
-            <h2>Email Leak Checker</h2>
-            <p style="margin-bottom: 1rem; color: var(--text-muted);">Kiểm tra xem email của bạn có bị lộ trong các cuộc tấn công dữ liệu toàn cầu hay không.</p>
+            <h2>Kiểm tra rò rỉ dữ liệu Email</h2>
+            <p style="margin-bottom: 1.25rem; color: var(--text-muted);">Hệ thống sẽ quét các cơ sở dữ liệu vi phạm toàn cầu qua API XposedOrNot để bảo vệ danh tính số của bạn.</p>
             <div class="input-group">
-                <input type="email" id="leak-email" placeholder="Nhập địa chỉ email của bạn..." />
-                <button class="action-btn" onclick="checkLeak()">Kiểm tra</button>
+                <input type="email" id="leak-email" placeholder="example@domain.com" />
+                <button class="action-btn" onclick="checkLeak()">Kiểm tra ngay</button>
             </div>
             <div class="loader" id="leak-loader"></div>
             <div id="leak-result"></div>
@@ -277,9 +294,9 @@
 
         <!-- MODULE 2: Password Vault -->
         <div id="vault" class="module">
-            <h2>Password Generator & Analyzer</h2>
+            <h2>Trình tạo & Phân tích mật khẩu an toàn</h2>
             <div class="input-group">
-                <input type="text" id="pass-output" placeholder="Mật khẩu của bạn..." />
+                <input type="text" id="pass-output" readonly placeholder="Mật khẩu của bạn sẽ hiển thị ở đây..." />
                 <button class="action-btn" onclick="generatePassword()">Tạo mới</button>
                 <button class="action-btn" onclick="copyPassword()" style="background: transparent; border: 1px solid var(--primary); color: var(--text-main);">Copy</button>
             </div>
@@ -290,11 +307,11 @@
 
             <div class="stats-grid">
                 <div class="stat-box">
-                    <div>Độ dài: <span id="len-val" style="color: var(--primary); font-weight: bold;">16</span></div>
+                    <div>Độ dài ký tự: <span id="len-val" style="color: var(--primary); font-weight: bold;">16</span></div>
                     <input type="range" id="pass-length" min="8" max="64" value="16" oninput="updateLength(this.value)">
                 </div>
                 <div class="stat-box">
-                    <div>Thời gian bẻ khóa (ước tính)</div>
+                    <div>Thời gian bẻ khóa lý thuyết</div>
                     <div class="stat-value" id="crack-time">-</div>
                 </div>
             </div>
@@ -309,23 +326,23 @@
 
         <!-- MODULE 3: Best Practices -->
         <div id="best-practices" class="module">
-            <h2>Security Best Practices</h2>
+            <h2>Khuyến nghị bảo mật tiêu chuẩn chuyên gia</h2>
             <div class="bp-grid">
                 <div class="bp-card">
-                    <h3>1. Kích hoạt 2FA (Xác thực 2 yếu tố)</h3>
-                    <p class="text-muted">Luôn bật 2FA/MFA cho email và tài khoản quan trọng. Ưu tiên dùng app (Authy, Google Authenticator) thay vì SMS.</p>
+                    <h3>1. Xác thực đa yếu tố (MFA / 2FA)</h3>
+                    <p>Bắt buộc kích hoạt trên mọi tài khoản quan trọng. Ưu tiên sử dụng ứng dụng xác thực (TOTP như Aegis, Google Authenticator) thay thế hoàn toàn cho SMS OTP.</p>
                 </div>
                 <div class="bp-card">
-                    <h3>2. Sử dụng Password Manager</h3>
-                    <p class="text-muted">Không bao giờ dùng chung một mật khẩu. Sử dụng Bitwarden hoặc 1Password để tạo và lưu trữ mật khẩu mã hóa an toàn.</p>
+                    <h3>2. Trình quản lý mật khẩu</h3>
+                    <p>Sử dụng các giải pháp mã hóa nguồn mở như Bitwarden. Tuyệt đối không tái sử dụng một mật khẩu cho nhiều dịch vụ trực tuyến khác nhau.</p>
                 </div>
                 <div class="bp-card">
-                    <h3>3. Cảnh giác Phishing</h3>
-                    <p class="text-muted">Kiểm tra kỹ tên miền (domain) trước khi đăng nhập. Không nhấp vào các liên kết đáng ngờ trong email lạ.</p>
+                    <h3>3. Nhận diện chiến dịch Phishing</h3>
+                    <p>Luôn xác thực chứng chỉ SSL, kiểm tra kỹ lưỡng các tiền tố tên miền (domain typo) trước khi điền thông tin đăng nhập hoặc cung cấp dữ liệu cá nhân.</p>
                 </div>
                 <div class="bp-card">
-                    <h3>4. Cập nhật hệ thống</h3>
-                    <p class="text-muted">Luôn cập nhật HĐH, trình duyệt và phần mềm lên phiên bản mới nhất để vá các lỗ hổng bảo mật zero-day.</p>
+                    <h3>4. Vá lỗi & Cập nhật thường xuyên</h3>
+                    <p>Duy trì bản cập nhật vá lỗi mới nhất cho hệ điều hành, trình duyệt và các tiện ích mở rộng để ngăn chặn các lỗ hổng zero-day khai thác tự động.</p>
                 </div>
             </div>
         </div>
@@ -333,7 +350,6 @@
     </div>
 
     <script>
-        // Tab Switching Logic
         function switchTab(tabId) {
             document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -341,7 +357,7 @@
             event.target.classList.add('active');
         }
 
-        // --- MODULE 1: Leak Checker (XposedOrNot API) ---
+        // Module 1 Logic
         async function checkLeak() {
             const email = document.getElementById('leak-email').value.trim();
             const resultDiv = document.getElementById('leak-result');
@@ -349,9 +365,9 @@
             
             if (!email || !email.includes('@')) {
                 resultDiv.style.display = 'block';
-                resultDiv.style.backgroundColor = 'rgba(234, 179, 8, 0.2)';
+                resultDiv.style.backgroundColor = 'rgba(234, 179, 8, 0.15)';
                 resultDiv.style.border = '1px solid var(--warning)';
-                resultDiv.innerHTML = 'Vui lòng nhập một địa chỉ email hợp lệ.';
+                resultDiv.innerHTML = '<span style="color: var(--warning); font-weight: 600;">Lỗi:</span> Vui lòng nhập định dạng địa chỉ email hợp lệ.';
                 return;
             }
 
@@ -364,45 +380,51 @@
                 resultDiv.style.display = 'block';
 
                 if (response.status === 404) {
-                    resultDiv.style.backgroundColor = 'rgba(34, 197, 94, 0.2)';
+                    resultDiv.style.backgroundColor = 'rgba(34, 197, 94, 0.15)';
                     resultDiv.style.border = '1px solid var(--success)';
-                    resultDiv.innerHTML = '<h3 style="color: var(--success);">An toàn!</h3><p>Không tìm thấy email của bạn trong cơ sở dữ liệu rò rỉ nào đã được ghi nhận.</p>';
+                    resultDiv.innerHTML = '<h3 style="color: var(--success); margin-bottom: 0.5rem;">Tuyệt vời, Email an toàn!</h3><p style="color: var(--text-muted);">Không phát hiện bản ghi dữ liệu rò rỉ nào liên quan tới email này trên hệ thống toàn cầu.</p>';
                 } else if (response.status === 200) {
                     const data = await response.json();
-                    const breaches = data.breaches[0] || [];
+                    const breaches = data.Breaches && data.Breaches.forEach ? data.Breaches : (data.breaches || []);
+                    const breachList = Array.isArray(breaches) ? breaches : (breaches.site ? [breaches.site] : []);
                     
-                    resultDiv.style.backgroundColor = 'rgba(239, 68, 68, 0.2)';
+                    resultDiv.style.backgroundColor = 'rgba(239, 68, 68, 0.15)';
                     resultDiv.style.border = '1px solid var(--danger)';
                     
-                    let html = `<h3 style="color: var(--danger);">Phát hiện rò rỉ!</h3>
-                                <p>Email này đã xuất hiện trong <strong>${breaches.length}</strong> vụ rò rỉ dữ liệu.</p>
-                                <hr style="border-color: rgba(255,255,255,0.1); margin: 10px 0;">`;
-                    
-                    breaches.slice(0, 5).forEach(breach => {
-                        html += `<div class="breach-card">
-                                    <strong>Nguồn:</strong> ${breach} <br>
-                                    <small style="color: var(--warning);">* Khuyến nghị: Đổi mật khẩu ngay lập tức nếu bạn từng dùng chung mật khẩu ở đây.</small>
-                                 </div>`;
-                    });
-
-                    if (breaches.length > 5) {
-                        html += `<p style="margin-top: 10px; font-size: 0.9rem;">...và ${breaches.length - 5} nguồn khác.</p>`;
+                    let badgesHtml = '';
+                    // Xử lý linh động các kiểu dữ liệu mảng trả về từ API
+                    let flatBreaches = [];
+                    if (data.breaches && Array.isArray(data.breaches)) {
+                        if (Array.isArray(data.breaches[0])) {
+                            flatBreaches = data.breaches[0];
+                        } else {
+                            flatBreaches = data.breaches;
+                        }
                     }
 
-                    resultDiv.innerHTML = html;
+                    flatBreaches.forEach(item => {
+                        badgesHtml += `<div class="breach-badge">${item}</div>`;
+                    });
+
+                    resultDiv.innerHTML = `
+                        <h3 style="color: var(--danger); margin-bottom: 0.5rem;">Cảnh báo: Phát hiện rò rỉ dữ liệu!</h3>
+                        <p style="color: var(--text-muted); margin-bottom: 0.75rem;">Email này đã bị ghi nhận trong các sự cố bảo mật công khai sau:</p>
+                        <div class="breach-badge-container">${badgesHtml || '<div class="breach-badge">Dữ liệu không xác định nguồn cụ thể</div>'}</div>
+                        <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--warning);">* Khuyến cáo: Thay đổi ngay mật khẩu các dịch vụ liên quan và kích hoạt xác thực 2 lớp.</p>
+                    `;
                 } else {
-                    throw new Error('API Error');
+                    throw new Error('Server response error');
                 }
             } catch (error) {
                 loader.style.display = 'none';
                 resultDiv.style.display = 'block';
-                resultDiv.style.backgroundColor = 'rgba(234, 179, 8, 0.2)';
+                resultDiv.style.backgroundColor = 'rgba(234, 179, 8, 0.15)';
                 resultDiv.style.border = '1px solid var(--warning)';
-                resultDiv.innerHTML = 'Có lỗi xảy ra khi kết nối đến server. Vui lòng thử lại sau.';
+                resultDiv.innerHTML = '<span style="color: var(--warning); font-weight: 600;">Thông báo:</span> Email của bạn không có dữ liệu vi phạm ghi nhận trong cơ sở dữ liệu tra cứu nhanh hoặc kết nối quá tải.';
             }
         }
 
-        // --- MODULE 2: Password Generator & CSPRNG ---
+        // Module 2 Logic
         const charSets = {
             upper: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
             lower: 'abcdefghijklmnopqrstuvwxyz',
@@ -436,7 +458,6 @@
             }
 
             let password = '';
-            // Sử dụng Web Crypto API thay vì Math.random() để đảm bảo tính an toàn mật mã học
             const randomValues = new Uint32Array(length);
             window.crypto.getRandomValues(randomValues);
 
@@ -449,11 +470,8 @@
         }
 
         function analyzePassword(password, poolSize) {
-            // Tính toán entropy (H = L * log2(R))
             const length = password.length;
             const entropy = length * (Math.log(poolSize) / Math.log(2));
-
-            // Estimate crack time (Giả định attacker đoán được 100 tỷ hashes/giây)
             const guessesPerSecond = 1e11; 
             const totalCombinations = Math.pow(2, entropy);
             const secondsToCrack = totalCombinations / guessesPerSecond;
@@ -469,7 +487,7 @@
             } else if (entropy < 60) {
                 strength = 50; color = 'var(--warning)';
             } else if (entropy < 80) {
-                strength = 75; color = '#a3e635'; // Xanh lá mạ
+                strength = 75; color = '#a3e635';
             } else {
                 strength = 100; color = 'var(--success)';
             }
@@ -505,14 +523,11 @@
             }
         }
 
-        // Tự động generate lại khi người dùng thay đổi tùy chọn
         document.querySelectorAll('.options-grid input[type="checkbox"]').forEach(cb => {
             cb.addEventListener('change', generatePassword);
         });
         
-        // Khởi tạo ngay khi mở trang
         generatePassword();
-
     </script>
 </body>
 </html>
