@@ -448,17 +448,17 @@
 
     <div class="container">
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('leak-tool')">
+            <button class="tab-btn active" onclick="switchTab('leak-tool',event)">
                 <i class="fa-solid fa-user-ninja"></i> Kiểm tra Rò Rỉ Email
             </button>
             <button class="tab-btn" onclick="switchTab('url-tool', event)">
     <i class="fa-solid fa-link"></i>
     Kiểm Tra URL
 </button>
-            <button class="tab-btn" onclick="switchTab('pwd-tool')">
+            <button class="tab-btn" onclick="switchTab('pwd-tool',event)">
                 <i class="fa-solid fa-key"></i> Kiểm Tra & Tạo Mật Khẩu
             </button>
-            <button class="tab-btn" onclick="switchTab('tips-tool')">
+            <button class="tab-btn" onclick="switchTab('tips-tool',event)">
                 <i class="fa-solid fa-shield-cat"></i> Biện Pháp Bảo Vệ Dữ Liệu Trên Không Gian Mạng 
             </button>
         </div>
@@ -476,48 +476,6 @@
 
             <div id="leakResult" class="result-box"></div>
         </div>
-
-        <div id="pwd-tool" class="tool-panel">
-            <h2><i class="fa-solid fa-vault" style="color: var(--primary-cyan)"></i> Đánh Giá & Gợi Ý Mật Khẩu An Toàn</h2>
-            <p style="color: var(--text-muted); margin-top: 8px;">
-                Mật khẩu của bạn được phân tích trực tiếp ngay trên trình duyệt máy bạn. Hãy yên tâm thử nghiệm!
-            </p>
-
-            <div style="margin-top: 1.5rem;">
-                <label style="font-weight: 600;">Mật khẩu bạn dự định đặt:</label>
-                <div class="input-group" style="margin-top: 8px;">
-                    <input type="password" id="pwdInput" placeholder="Nhập mật khẩu cần kiểm tra..." oninput="evaluatePassword()">
-                    <button class="btn-action" style="background: rgba(255,255,255,0.1); color: #fff;" onclick="togglePwdVisibility()">
-                        <i class="fa-solid fa-eye" id="eyeIcon"></i>
-                    </button>
-                </div>
-
-                <div class="meter-container">
-                    <div id="pwdMeter" class="meter-bar"></div>
-                </div>
-                <p id="pwdStatusText" style="font-size: 0.95rem; font-weight: 600;"></p>
-                <p id="pwdCrackTime" style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;"></p>
-            </div>
-
-            <div id="pwdSuggestion" style="margin-top: 2rem; display: none; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
-                <h3 style="color: var(--warning-orange);"><i class="fa-solid fa-triangle-exclamation"></i> Mật khẩu chưa đủ an toàn!</h3>
-                <p style="color: var(--text-muted); margin-top: 5px;">Hệ thống tự động tạo cho bạn một mật khẩu chuẩn quân sự cực kỳ bảo mật:</p>
-                
-                <div class="suggested-pwd">
-                    <span id="generatedPwdText">...</span>
-                    <button class="copy-btn" onclick="copyPassword()" title="Sao chép">
-                        <i class="fa-regular fa-copy"></i> Copy
-                    </button>
-                </div>
-                <button class="btn-action" style="margin-top: 12px; font-size: 0.85rem; padding: 10px 18px;" onclick="generateStrongPwd()">
-                    <i class="fa-solid fa-arrows-rotate"></i> Tạo Mật Khẩu Khác
-                </button>
-            </div>
-        </div>
-
-        <div id="tips-tool" class="tool-panel">
-            <h2><i class="fa-solid fa-user-shield" style="color: var(--primary-cyan)"></i> Khuyến Nghị Bảo Vệ Tài Khoản Mạng</h2>
-            <p style="color: var(--text-muted); margin-top: 8px;">Thực hiện ngay các bước này để bảo vệ tài khoản cá nhân và người thân khỏi Hacker:</p>
         <div id="url-tool" class="tool-panel">
 
 <h2>
@@ -572,6 +530,48 @@ style="display:none">
 </div>
 
 </div>
+        <div id="pwd-tool" class="tool-panel">
+            <h2><i class="fa-solid fa-vault" style="color: var(--primary-cyan)"></i> Đánh Giá & Gợi Ý Mật Khẩu An Toàn</h2>
+            <p style="color: var(--text-muted); margin-top: 8px;">
+                Mật khẩu của bạn được phân tích trực tiếp ngay trên trình duyệt máy bạn. Hãy yên tâm thử nghiệm!
+            </p>
+
+            <div style="margin-top: 1.5rem;">
+                <label style="font-weight: 600;">Mật khẩu bạn dự định đặt:</label>
+                <div class="input-group" style="margin-top: 8px;">
+                    <input type="password" id="pwdInput" placeholder="Nhập mật khẩu cần kiểm tra..." oninput="evaluatePassword()">
+                    <button class="btn-action" style="background: rgba(255,255,255,0.1); color: #fff;" onclick="togglePwdVisibility()">
+                        <i class="fa-solid fa-eye" id="eyeIcon"></i>
+                    </button>
+                </div>
+
+                <div class="meter-container">
+                    <div id="pwdMeter" class="meter-bar"></div>
+                </div>
+                <p id="pwdStatusText" style="font-size: 0.95rem; font-weight: 600;"></p>
+                <p id="pwdCrackTime" style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;"></p>
+            </div>
+
+            <div id="pwdSuggestion" style="margin-top: 2rem; display: none; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
+                <h3 style="color: var(--warning-orange);"><i class="fa-solid fa-triangle-exclamation"></i> Mật khẩu chưa đủ an toàn!</h3>
+                <p style="color: var(--text-muted); margin-top: 5px;">Hệ thống tự động tạo cho bạn một mật khẩu chuẩn quân sự cực kỳ bảo mật:</p>
+                
+                <div class="suggested-pwd">
+                    <span id="generatedPwdText">...</span>
+                    <button class="copy-btn" onclick="copyPassword()" title="Sao chép">
+                        <i class="fa-regular fa-copy"></i> Copy
+                    </button>
+                </div>
+                <button class="btn-action" style="margin-top: 12px; font-size: 0.85rem; padding: 10px 18px;" onclick="generateStrongPwd()">
+                    <i class="fa-solid fa-arrows-rotate"></i> Tạo Mật Khẩu Khác
+                </button>
+            </div>
+        </div>
+
+        <div id="tips-tool" class="tool-panel">
+            <h2><i class="fa-solid fa-user-shield" style="color: var(--primary-cyan)"></i> Khuyến Nghị Bảo Vệ Tài Khoản Mạng</h2>
+            <p style="color: var(--text-muted); margin-top: 8px;">Thực hiện ngay các bước này để bảo vệ tài khoản cá nhân và người thân khỏi Hacker:</p>
+        
             <div class="tips-grid">
                 <div class="tip-card">
                     <i class="fa-solid fa-mobile-screen-button"></i>
@@ -621,7 +621,7 @@ style="display:none">
             document.querySelectorAll('.tool-panel').forEach(panel => panel.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             
-            document.getElementById(tabId).classList.add('active');
+            document.getElementById(tabName).classList.add('active');
             if(event){
 
 event.currentTarget.classList.add("active");
