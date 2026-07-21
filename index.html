@@ -896,7 +896,20 @@ event.currentTarget.classList.add("active");
         const data = await res.json();
 
         const breaches = data?.ExposedBreaches?.breaches_details || [];
-        const exposedData = data?.ExposedData || [];
+        
+const leakedTypes = new Set();
+
+breaches.forEach(b => {
+    if (!b.xposed_data) return;
+
+    b.xposed_data
+        .split(";")
+        .map(x => x.trim())
+        .filter(Boolean)
+        .forEach(x => leakedTypes.add(x));
+});
+
+const exposedCount = leakedTypes.size;
         let riskScore = 0;
 
 if (breaches.length > 0) {
@@ -943,45 +956,47 @@ riskScore = Math.min(riskScore,100);
         }
 
         const dashboard = `
-            <div class="leak-dashboard">
-                <div class="leak-stat">
-                    <h3>${breaches.length}</h3>
-                    <p>Vụ rò rỉ</p>
-                </div>
-                <div class="leak-stat">
-                    <h3>${riskScore}</h3>
-                    <p>Risk Score</p>
-                </div>
-                <div class="leak-stat">
-                    <h3>${exposedData.length}</h3>
-                    <p>Loại dữ liệu</p>
-                </div>
-            </div>
+    <div class="leak-dashboard">
+        <div class="leak-stat">
+            <h3>${breaches.length}</h3>
+            <p>Vụ rò rỉ</p>
+        </div>
+
+        <div class="leak-stat">
+            <h3>${riskScore}</h3>
+            <p>Risk Score</p>
+        </div>
+
+        <div class="leak-stat">
+            <h3>${exposedCount}</h3>
+            <p>Loại dữ liệu</p>
+        </div>
+    </div>
+`;
+        const dataBadges = [...leakedTypes]
+    .map(clean => {
+
+        let icon = "fa-database";
+        const lower = clean.toLowerCase();
+
+        if (lower.includes("password")) icon = "fa-key";
+        else if (lower.includes("email")) icon = "fa-envelope";
+        else if (lower.includes("phone")) icon = "fa-phone";
+        else if (lower.includes("name")) icon = "fa-user";
+        else if (lower.includes("ip")) icon = "fa-network-wired";
+        else if (lower.includes("address")) icon = "fa-location-dot";
+        else if (lower.includes("username")) icon = "fa-user-tag";
+        else if (lower.includes("dob")) icon = "fa-calendar";
+        else if (lower.includes("credit")) icon = "fa-credit-card";
+
+        return `
+            <span class="badge-item">
+                <i class="fa-solid ${icon}"></i>
+                ${clean}
+            </span>
         `;
-
-        const dataBadges = exposedData
-            .flatMap(d => d.split(';'))
-            .map(item => {
-                const clean = item.trim();
-                if (!clean) return '';
-
-                let icon = 'fa-database';
-                const lower = clean.toLowerCase();
-
-                if (lower.includes('password')) icon = 'fa-key';
-                else if (lower.includes('email')) icon = 'fa-envelope';
-                else if (lower.includes('phone')) icon = 'fa-phone';
-                else if (lower.includes('ip')) icon = 'fa-network-wired';
-                else if (lower.includes('name')) icon = 'fa-user';
-
-                return `
-                    <span class="badge-item">
-                        <i class="fa-solid ${icon}"></i>
-                        ${clean}
-                    </span>
-                `;
-            })
-            .join('');
+    })
+    .join("");
 
         
         const breachCards = breaches.map(b => `
