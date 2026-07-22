@@ -792,9 +792,9 @@ border:1px solid rgba(0,255,255,.18);
 
 .log-time { color: var(--text-muted); font-family: monospace;}
 .log-threat { color: var(--danger-red); font-weight: 700; }
-/* Styling cho Quiz Section */
+
 .quiz-container {
-    background: rgba(20, 20, 25, 0.6); /* Nền tối bán trong suốt */
+    background: rgba(20, 20, 25, 0.6); 
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -810,7 +810,7 @@ border:1px solid rgba(0,255,255,.18);
 .question-title {
     font-size: 1.3rem;
     margin-bottom: 20px;
-    color: #00ffcc; /* Màu nhấn chủ đạo phong cách cyber */
+    color: #00ffcc; 
 }
 
 .options-grid {
@@ -941,7 +941,7 @@ Bản đồ Tấn công mạng (Simulator)
 
             <div id="leakResult" class="result-box"></div>
         </div>
-<!-- Cyber Security Quiz Section -->
+
 <div class="glass-panel quiz-container">
     <h2><i class="fas fa-brain"></i> Thử thách Kiến thức An toàn Thông tin</h2>
     <p class="subtitle">Kiểm tra xem bạn đã sẵn sàng đối mặt với các mối đe dọa trên không gian mạng chưa?</p>
@@ -949,7 +949,7 @@ Bản đồ Tấn công mạng (Simulator)
     <div id="quiz-content">
         <h3 id="question-text" class="question-title">Đang tải câu hỏi...</h3>
         <div id="options-container" class="options-grid">
-            <!-- Các nút đáp án sẽ được JS render tại đây -->
+            
         </div>
         <div id="quiz-feedback" class="feedback-msg hidden"></div>
         
@@ -2154,7 +2154,7 @@ function latLngToVector3(lat, lng, radius) {
     const y = (radius * Math.cos(phi));
     return new THREE.Vector3(x, y, z);
 }
-// Dữ liệu câu hỏi mới: Chủ đề Bảo vệ bản thân trên mạng
+
 const quizData = [
     {
         question: "1. Biện pháp nào sau đây là hiệu quả nhất để bảo vệ tài khoản của bạn ngay cả khi ai đó vô tình biết được mật khẩu?",
@@ -2205,14 +2205,13 @@ const quizData = [
 let currentQuestionIndex = 0;
 let score = 0;
 
-// Khởi tạo Quiz
 function loadQuestion() {
     const q = quizData[currentQuestionIndex];
     document.getElementById('question-text').innerText = q.question;
     document.getElementById('quiz-progress').innerText = `Câu ${currentQuestionIndex + 1} / ${quizData.length}`;
     
     const optionsContainer = document.getElementById('options-container');
-    optionsContainer.innerHTML = ''; // Xóa đáp án cũ
+    optionsContainer.innerHTML = ''; 
     document.getElementById('quiz-feedback').classList.add('hidden');
     document.getElementById('next-btn').classList.add('hidden');
 
@@ -2225,12 +2224,10 @@ function loadQuestion() {
     });
 }
 
-// Kiểm tra đáp án
 function checkAnswer(selectedIndex, btnElement) {
     const q = quizData[currentQuestionIndex];
     const allButtons = document.querySelectorAll('.option-btn');
     
-    // Vô hiệu hóa tất cả các nút
     allButtons.forEach(btn => btn.disabled = true);
 
     const feedbackEl = document.getElementById('quiz-feedback');
@@ -2243,7 +2240,7 @@ function checkAnswer(selectedIndex, btnElement) {
         score++;
     } else {
         btnElement.classList.add('wrong');
-        allButtons[q.correctAnswer].classList.add('correct'); // Hiển thị đáp án đúng
+        allButtons[q.correctAnswer].classList.add('correct');
         feedbackEl.classList.add('error');
         feedbackEl.innerHTML = `<i class="fas fa-times-circle"></i> Sai rồi! Đáp án đúng là: <b>${q.options[q.correctAnswer]}</b>. <br><br>${q.explanation}`;
     }
@@ -2251,7 +2248,6 @@ function checkAnswer(selectedIndex, btnElement) {
     document.getElementById('next-btn').classList.remove('hidden');
 }
 
-// Chuyển câu hỏi
 function nextQuestion() {
     currentQuestionIndex++;
     if (currentQuestionIndex < quizData.length) {
@@ -2261,7 +2257,7 @@ function nextQuestion() {
     }
 }
 
-// Hiển thị kết quả cuối cùng
+
 function showResults() {
     const container = document.getElementById('quiz-content');
     let message = score === quizData.length 
@@ -2277,15 +2273,13 @@ function showResults() {
     `;
 }
 
-// Khởi động lại
+
 function resetQuiz() {
     currentQuestionIndex = 0;
     score = 0;
-    // Tải lại khung HTML gốc của quiz content trước khi load câu hỏi (bạn có thể cải thiện phần này bằng template)
-    location.reload(); // Cách nhanh nhất để reset trạng thái DOM
+    location.reload(); 
 }
 
-// Chạy quiz khi trang web tải xong
 document.addEventListener('DOMContentLoaded', loadQuestion);
     </script>
 </body>
