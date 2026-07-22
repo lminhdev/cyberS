@@ -690,7 +690,7 @@ position:relative;
 border:1px solid rgba(0,255,255,.18);
 
 }
-        /* THÊM VÀO PHẦN <style> */
+        
 .attack-overlay {
     position: absolute;
     top: 20px;
@@ -703,7 +703,7 @@ border:1px solid rgba(0,255,255,.18);
     border-radius: 12px;
     padding: 15px;
     z-index: 10;
-    pointer-events: none; /* Giúp click chuột xuyên qua UI để xoay trái đất */
+    pointer-events: none;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
 }
 
@@ -772,7 +772,7 @@ onclick="switchTab('attack-map',event)">
 
 <i class="fa-solid fa-earth-americas"></i>
 
-Tấn công mạng
+Bản đồ Tấn công mạng (Demo)
 
 </button>
         </div>
@@ -938,7 +938,6 @@ style="display:none">
     </div>
 
     <div id="attackContainer">
-        <!-- UI Overlay mới -->
         <div class="attack-overlay">
             <div class="attack-log-title">
                 <i class="fa-solid fa-satellite-dish fa-beat" style="color: var(--danger-red);"></i> 
@@ -1882,15 +1881,12 @@ let attackRunning=false;
 
     setupControls();
     
-    // Kích hoạt sinh cuộc tấn công mỗi 2 giây
     setInterval(createAttack, 2000);
     
     animate();
 }
-// 1. Khai báo thêm biến controls toàn cục
 let controls;
 
-// 2. Mở rộng dữ liệu quốc gia phong phú hơn
 const countries = [
     { name:"Vietnam", lat:16.047, lng:108.206 },
     { name:"Japan", lat:35.689, lng:139.692 },
@@ -1904,9 +1900,6 @@ const countries = [
     { name:"Australia", lat:-25.274, lng:133.775 },
     { name:"South Africa", lat:-30.559, lng:22.937 }
 ];
-
-// Trong hàm initAttackMap(), thêm đoạn code OrbitControls này ngay dưới dòng:
-// document.getElementById("attackContainer").appendChild(renderer.domElement);
 function setupControls() {
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
@@ -1917,9 +1910,6 @@ function setupControls() {
     controls.autoRotate = true; 
     controls.autoRotateSpeed = 0.8;
 }
-// Hãy nhớ gọi setupControls() bên trong hàm initAttackMap() của bạn.
-
-// 3. Hàm tấn công mới tạo đường cong (Arc) thay vì đâm xuyên lòng đất
 function createAttack(){
     const from = countries[Math.floor(Math.random()*countries.length)];
     let to = countries[Math.floor(Math.random()*countries.length)];
@@ -1928,10 +1918,9 @@ function createAttack(){
         to = countries[Math.floor(Math.random()*countries.length)];
     }
 
-    // Cập nhật UI Log Panel trực tiếp
     const logList = document.getElementById("realtimeLogs");
     if(logList) {
-        if(logList.innerText.includes("Đang chờ")) logList.innerHTML = ''; // Xóa dòng chờ
+        if(logList.innerText.includes("Đang chờ")) logList.innerHTML = ''; 
         const time = new Date().toLocaleTimeString('vi-VN', {hour12: false});
         const logHTML = `
             <div class="log-item">
@@ -1941,16 +1930,15 @@ function createAttack(){
                 <span style="font-weight: 600;">${to.name}</span>
             </div>`;
         logList.insertAdjacentHTML('afterbegin', logHTML);
-        if(logList.children.length > 5) logList.lastChild.remove(); // Chỉ giữ 5 log gần nhất
+        if(logList.children.length > 5) logList.lastChild.remove();
     }
 
     const start = latLngToVector3(from.lat, from.lng, 1.01);
     const end = latLngToVector3(to.lat, to.lng, 1.01);
 
-    // Tính toán đỉnh của đường cong (nằm giữa start và end, nhô lên không trung)
     const distance = start.distanceTo(end);
     const mid = start.clone().lerp(end, 0.5);
-    const elevation = 1.01 + (distance * 0.45); // Độ cao vòng cung tỉ lệ thuận với khoảng cách
+    const elevation = 1.01 + (distance * 0.45);
     mid.normalize().multiplyScalar(elevation);
 
     const curve = new THREE.QuadraticBezierCurve3(start, mid, end);
@@ -1966,7 +1954,6 @@ function createAttack(){
     const line = new THREE.Line(geometry, material);
     scene.add(line);
 
-    // Fade out mượt mà (giảm opacity dần thay vì xóa đột ngột sau 2 giây)
     let fadeInterval = setInterval(()=>{
         line.material.opacity -= 0.015;
         if(line.material.opacity <= 0){
@@ -1977,14 +1964,11 @@ function createAttack(){
         }
     }, 30);
 }
-
-// 4. Cập nhật hàm animate()
 function animate(){
     requestAnimationFrame(animate);
 
     if(earth) earth.rotation.y += 0.0015;
     
-    // Kiểm tra an toàn trước khi gọi thuộc tính rotation
     if(typeof clouds !== 'undefined' && clouds) clouds.rotation.y += 0.0019;
     if(typeof atmosphere !== 'undefined' && atmosphere) atmosphere.rotation.y += 0.0007;
     if(typeof stars !== 'undefined' && stars) stars.rotation.y += 0.0001;
