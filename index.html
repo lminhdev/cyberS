@@ -920,42 +920,37 @@ style="display:none">
                 </div>
             </div>
         </div>
-        <div
-id="attack-map"
-class="tool-panel">
+        <div id="attack-map" class="tool-panel">
 
-<h2>
-
-<i
-class="fa-solid fa-earth-americas"
-style="color:var(--primary-cyan)">
-</i>
-
-Cyber Attack Map
-
-</h2>
-
-<p
-class="tool-description">
-
-Mô phỏng các cuộc tấn công mạng toàn cầu theo thời gian thực.
-
-</p>
-
-<div id="attackContainer">
-    <!-- UI Overlay mới -->
-    <div class="attack-overlay">
-        <div class="attack-log-title">
-            <i class="fa-solid fa-satellite-dish fa-beat" style="color: var(--danger-red);"></i> 
-            LIVE THREAT RADAR
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 15px;">
+        <div>
+            <h2>
+                <i class="fa-solid fa-earth-americas" style="color:var(--primary-cyan)"></i>
+                Cyber Attack Map
+            </h2>
+            <p class="tool-description">
+                Mô phỏng các cuộc tấn công mạng toàn cầu theo thời gian thực.
+            </p>
         </div>
-        <div class="log-list" id="realtimeLogs">
-            <div class="log-item" style="color: var(--text-muted); font-style: italic;">
-                Đang chờ tín hiệu tấn công...
+        <a href="https://cybermap.kaspersky.com/" target="_blank" rel="noopener noreferrer" class="btn-action" style="font-size: 0.85rem; padding: 10px 16px; text-decoration: none; white-space: nowrap;">
+            <i class="fa-solid fa-external-link-alt"></i> Kaspersky Map
+        </a>
+    </div>
+
+    <div id="attackContainer">
+        <!-- UI Overlay mới -->
+        <div class="attack-overlay">
+            <div class="attack-log-title">
+                <i class="fa-solid fa-satellite-dish fa-beat" style="color: var(--danger-red);"></i> 
+                LIVE THREAT RADAR
+            </div>
+            <div class="log-list" id="realtimeLogs">
+                <div class="log-item" style="color: var(--text-muted); font-style: italic;">
+                    Đang chờ tín hiệu tấn công...
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 </div>
     </div>
