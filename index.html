@@ -1834,125 +1834,63 @@ let clouds;
 let angle = 0;
 let attackRunning=false;
         function initAttackMap(){
+    if(attackRunning) return;
+    attackRunning = true;
 
-if(attackRunning) return;
+    scene = new THREE.Scene();
 
-attackRunning=true;
-
-scene=new THREE.Scene();
-
-camera=new THREE.PerspectiveCamera(
-
-45,
-
-document.getElementById("attackContainer").clientWidth/
-
-document.getElementById("attackContainer").clientHeight,
-
-0.1,
-
-1000
-
-);
-
-camera.position.z=4;
-
-renderer=new THREE.WebGLRenderer({
-
-antialias:true
-
-});
-
-renderer.setPixelRatio(window.devicePixelRatio);
-
-renderer.setSize(
-
-document.getElementById("attackContainer").clientWidth,
-
-document.getElementById("attackContainer").clientHeight
-
-);
-
-document.getElementById("attackContainer")
-
-.appendChild(renderer.domElement);
-            const light1=new THREE.PointLight(
-
-0xffffff,
-
-2
-
-);
-
-light1.position.set(5,3,5);
-
-scene.add(light1);
-
-const light2=new THREE.AmbientLight(
-
-0x406080,
-
-1.5
-
-);
-
-scene.add(light2);
-           const loader = new THREE.TextureLoader();
-
-const earthTexture = loader.load(
-"https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg"
-);
-
-const cloudTexture = loader.load(
-"https://threejs.org/examples/textures/planets/earth_clouds_1024.png"
-);
-            /* ===== EARTH ===== */
-
-const earthGeometry = new THREE.SphereGeometry(
-    1,
-    128,
-    128
-);
-
-const earthMaterial = new THREE.MeshPhongMaterial({
-
-    map: earthTexture,
-
-    shininess:18,
-
-    specular:new THREE.Color(0x3355ff)
-
-});
-
-earth = new THREE.Mesh(
-
-    earthGeometry,
-
-    earthMaterial
-
-);
-
-scene.add(earth);
-countries.forEach(c=>{
-
-    const pos = latLngToVector3(c.lat,c.lng,1.01);
-
-    const marker = new THREE.Mesh(
-
-        new THREE.SphereGeometry(0.008),
-
-        new THREE.MeshBasicMaterial({
-            color:0x00ffff
-        })
-
+    camera = new THREE.PerspectiveCamera(
+        45,
+        document.getElementById("attackContainer").clientWidth /
+        document.getElementById("attackContainer").clientHeight,
+        0.1,
+        1000
     );
+    camera.position.z = 4;
 
-    marker.position.copy(pos);
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(
+        document.getElementById("attackContainer").clientWidth,
+        document.getElementById("attackContainer").clientHeight
+    );
+    document.getElementById("attackContainer").appendChild(renderer.domElement);
 
-    scene.add(marker);
+    const light1 = new THREE.PointLight(0xffffff, 2);
+    light1.position.set(5, 3, 5);
+    scene.add(light1);
 
-  });
-   setupControls();
+    const light2 = new THREE.AmbientLight(0x406080, 1.5);
+    scene.add(light2);
+
+    const loader = new THREE.TextureLoader();
+    const earthTexture = loader.load("https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg");
+
+    const earthGeometry = new THREE.SphereGeometry(1, 128, 128);
+    const earthMaterial = new THREE.MeshPhongMaterial({
+        map: earthTexture,
+        shininess: 18,
+        specular: new THREE.Color(0x3355ff)
+    });
+    earth = new THREE.Mesh(earthGeometry, earthMaterial);
+    scene.add(earth);
+
+    countries.forEach(c => {
+        const pos = latLngToVector3(c.lat, c.lng, 1.01);
+        const marker = new THREE.Mesh(
+            new THREE.SphereGeometry(0.008),
+            new THREE.MeshBasicMaterial({ color: 0x00ffff })
+        );
+        marker.position.copy(pos);
+        scene.add(marker);
+    });
+
+    setupControls();
+    
+    // Kích hoạt sinh cuộc tấn công mỗi 2 giây
+    setInterval(createAttack, 2000);
+    
+    animate();
 }
 // 1. Khai báo thêm biến controls toàn cục
 let controls;
@@ -2049,28 +1987,14 @@ function createAttack(){
 function animate(){
     requestAnimationFrame(animate);
 
-    // Giữ nguyên các hiệu ứng xoay môi trường
     if(earth) earth.rotation.y += 0.0015;
-    if(clouds) clouds.rotation.y += 0.0019;
-    if(atmosphere) atmosphere.rotation.y += 0.0007;
-    if(stars) stars.rotation.y += 0.0001;
+    
+    // Kiểm tra an toàn trước khi gọi thuộc tính rotation
+    if(typeof clouds !== 'undefined' && clouds) clouds.rotation.y += 0.0019;
+    if(typeof atmosphere !== 'undefined' && atmosphere) atmosphere.rotation.y += 0.0007;
+    if(typeof stars !== 'undefined' && stars) stars.rotation.y += 0.0001;
 
-    // Xóa bỏ đoạn tính toán camera.position thủ công (Math.sin/cos) ở code cũ. 
-    // Thay vào đó, ủy quyền xoay camera cho OrbitControls:
     if(controls) controls.update();
-
-    if(starMaterial) starMaterial.opacity = 0.65 + Math.sin(Date.now()*0.0015)*0.25;
-
-    // Hiệu ứng nhịp đập (pulse)
-    if(pulse) {
-        pulse.scale.x += 0.003;
-        pulse.scale.y += 0.003;
-        pulse.material.opacity -= 0.002;
-        if(pulse.material.opacity <= 0){
-            pulse.scale.set(1,1,1);
-            pulse.material.opacity = 0.22;
-        }
-    }
 
     renderer.render(scene, camera);
 }
