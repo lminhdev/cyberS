@@ -27,18 +27,14 @@
             padding: 0;
             font-family: 'Inter', sans-serif;
         }
-
-        /* 1. Nền chính: Hệ thống lưới tọa độ không gian mạng */
 body {
-    background-color: #030610; /* Chuyển nền về màu Midnight Blue cực thẫm */
+    background-color: #030610;
     background-image: 
-        /* Lưới siêu nhỏ (Micro Grid) - Tạo cảm giác dữ liệu thô */
         linear-gradient(rgba(0, 242, 254, 0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 242, 254, 0.03) 1px, transparent 1px),
-        /* Lưới phân vùng lớn (Macro Grid) - Tạo cảm giác bản đồ/radar */
         linear-gradient(rgba(0, 242, 254, 0.08) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 242, 254, 0.08) 1px, transparent 1px),
-        /* Vignette: Làm tối 4 góc màn hình để tập trung mắt vào nội dung giữa */
+        
         radial-gradient(circle at 50% 50%, transparent 20%, #030610 100%);
     background-size: 
         20px 20px, 
@@ -53,10 +49,9 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    position: relative; /* Cần thiết để neo các hiệu ứng bên dưới */
+    position: relative;
 }
 
-/* 2. Hiệu ứng Scanline: Giả lập sọc của màn hình máy tính hiển thị dữ liệu (CRT) */
 body::before {
     content: "";
     position: fixed;
@@ -69,13 +64,12 @@ body::before {
         rgba(255, 255, 255, 0) 50%,
         rgba(0, 0, 0, 0.25) 50%
     );
-    background-size: 100% 4px; /* Độ dày của sọc màn hình */
-    pointer-events: none; /* CỰC KỲ QUAN TRỌNG: Cho phép chuột click xuyên qua lớp này */
-    z-index: 9999; /* Phủ lên toàn bộ giao diện */
+    background-size: 100% 4px; 
+    pointer-events: none;
+    z-index: 9999;
     opacity: 0.6;
 }
 
-/* 3. Tia quét Radar: Tạo một luồng ánh sáng quét dọc màn hình liên tục */
 body::after {
     content: "";
     position: fixed;
@@ -86,7 +80,7 @@ body::after {
     background: linear-gradient(
         to bottom,
         rgba(0, 242, 254, 0) 0%,
-        rgba(0, 242, 254, 0.04) 50%, /* Màu của tia quét */
+        rgba(0, 242, 254, 0.04) 50%,
         rgba(0, 242, 254, 0) 100%
     );
     pointer-events: none;
@@ -94,7 +88,6 @@ body::after {
     animation: network-scan 8s linear infinite;
 }
 
-/* Animation cho tia quét */
 @keyframes network-scan {
     0% { transform: translateY(0); }
     100% { transform: translateY(50%); }
