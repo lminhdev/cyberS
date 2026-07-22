@@ -28,16 +28,77 @@
             font-family: 'Inter', sans-serif;
         }
 
-        body {
-            background-color: var(--bg-color);
-            background-image: 
-                radial-gradient(circle at 15% 15%, rgba(0, 242, 254, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 85% 85%, rgba(79, 172, 254, 0.08) 0%, transparent 40%);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+        /* 1. Nền chính: Hệ thống lưới tọa độ không gian mạng */
+body {
+    background-color: #030610; /* Chuyển nền về màu Midnight Blue cực thẫm */
+    background-image: 
+        /* Lưới siêu nhỏ (Micro Grid) - Tạo cảm giác dữ liệu thô */
+        linear-gradient(rgba(0, 242, 254, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 242, 254, 0.03) 1px, transparent 1px),
+        /* Lưới phân vùng lớn (Macro Grid) - Tạo cảm giác bản đồ/radar */
+        linear-gradient(rgba(0, 242, 254, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 242, 254, 0.08) 1px, transparent 1px),
+        /* Vignette: Làm tối 4 góc màn hình để tập trung mắt vào nội dung giữa */
+        radial-gradient(circle at 50% 50%, transparent 20%, #030610 100%);
+    background-size: 
+        20px 20px, 
+        20px 20px, 
+        100px 100px, 
+        100px 100px, 
+        100% 100%;
+    background-position: center center;
+    background-attachment: fixed;
+    
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative; /* Cần thiết để neo các hiệu ứng bên dưới */
+}
+
+/* 2. Hiệu ứng Scanline: Giả lập sọc của màn hình máy tính hiển thị dữ liệu (CRT) */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0) 50%,
+        rgba(0, 0, 0, 0.25) 50%
+    );
+    background-size: 100% 4px; /* Độ dày của sọc màn hình */
+    pointer-events: none; /* CỰC KỲ QUAN TRỌNG: Cho phép chuột click xuyên qua lớp này */
+    z-index: 9999; /* Phủ lên toàn bộ giao diện */
+    opacity: 0.6;
+}
+
+/* 3. Tia quét Radar: Tạo một luồng ánh sáng quét dọc màn hình liên tục */
+body::after {
+    content: "";
+    position: fixed;
+    top: -100%;
+    left: 0;
+    width: 100vw;
+    height: 200%;
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 242, 254, 0) 0%,
+        rgba(0, 242, 254, 0.04) 50%, /* Màu của tia quét */
+        rgba(0, 242, 254, 0) 100%
+    );
+    pointer-events: none;
+    z-index: 0;
+    animation: network-scan 8s linear infinite;
+}
+
+/* Animation cho tia quét */
+@keyframes network-scan {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(50%); }
+}
 
         header {
             padding: 2rem 1rem;
