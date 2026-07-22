@@ -690,6 +690,53 @@ position:relative;
 border:1px solid rgba(0,255,255,.18);
 
 }
+        /* THÊM VÀO PHẦN <style> */
+.attack-overlay {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 280px;
+    background: rgba(10, 15, 25, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 242, 254, 0.2);
+    border-radius: 12px;
+    padding: 15px;
+    z-index: 10;
+    pointer-events: none; /* Giúp click chuột xuyên qua UI để xoay trái đất */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.attack-log-title {
+    color: var(--primary-cyan);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+    border-bottom: 1px solid rgba(0, 242, 254, 0.2);
+    padding-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.log-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.log-item {
+    font-size: 0.8rem;
+    color: var(--text-main);
+    animation: fadeIn 0.3s ease-in;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.log-time { color: var(--text-muted); font-family: monospace;}
+.log-threat { color: var(--danger-red); font-weight: 700; }
     </style>
 </head>
 <body>
@@ -895,7 +942,20 @@ Mô phỏng các cuộc tấn công mạng toàn cầu theo thời gian thực.
 
 </p>
 
-<div id="attackContainer"></div>
+<div id="attackContainer">
+    <!-- UI Overlay mới -->
+    <div class="attack-overlay">
+        <div class="attack-log-title">
+            <i class="fa-solid fa-satellite-dish fa-beat" style="color: var(--danger-red);"></i> 
+            LIVE THREAT RADAR
+        </div>
+        <div class="log-list" id="realtimeLogs">
+            <div class="log-item" style="color: var(--text-muted); font-style: italic;">
+                Đang chờ tín hiệu tấn công...
+            </div>
+        </div>
+    </div>
+</div>
 
 </div>
     </div>
@@ -906,7 +966,10 @@ Mô phỏng các cuộc tấn công mạng toàn cầu theo thời gian thực.
             Dữ liệu hoàn toàn được mã hóa & xử lý tại Trình duyệt cục bộ (Client-Side Only).
         </p>
     </footer>
+<!-- Cập nhật phần script ở gần cuối body -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.158.0/three.min.js"></script>
+<!-- THÊM DÒNG NÀY: -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.158.0/examples/js/controls/OrbitControls.js"></script>
     <script>
 
         let attackMapLoaded = false;
@@ -1891,320 +1954,125 @@ countries.forEach(c=>{
     scene.add(marker);
 
 });
+// 1. Khai báo thêm biến controls toàn cục
+let controls;
+
+// 2. Mở rộng dữ liệu quốc gia phong phú hơn
+const countries = [
+    { name:"Vietnam", lat:16.047, lng:108.206 },
+    { name:"Japan", lat:35.689, lng:139.692 },
+    { name:"USA", lat:38.897, lng:-77.036 },
+    { name:"France", lat:48.856, lng:2.352 },
+    { name:"Brazil", lat:-15.793, lng:-47.882 },
+    { name:"Russia", lat:61.524, lng:105.318 },
+    { name:"China", lat:35.861, lng:104.195 },
+    { name:"UK", lat:55.378, lng:-3.435 },
+    { name:"India", lat:20.593, lng:78.962 },
+    { name:"Australia", lat:-25.274, lng:133.775 },
+    { name:"South Africa", lat:-30.559, lng:22.937 }
+];
+
+// Trong hàm initAttackMap(), thêm đoạn code OrbitControls này ngay dưới dòng:
+// document.getElementById("attackContainer").appendChild(renderer.domElement);
+function setupControls() {
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.enablePan = false;
+    controls.minDistance = 1.5;
+    controls.maxDistance = 5.0;
+    controls.autoRotate = true; 
+    controls.autoRotateSpeed = 0.8;
+}
+// Hãy nhớ gọi setupControls() bên trong hàm initAttackMap() của bạn.
+
+// 3. Hàm tấn công mới tạo đường cong (Arc) thay vì đâm xuyên lòng đất
 function createAttack(){
-
-    const from =
-    countries[Math.floor(Math.random()*countries.length)];
-
-    let to =
-    countries[Math.floor(Math.random()*countries.length)];
-
-    while(from===to){
-        to =
-        countries[Math.floor(Math.random()*countries.length)];
+    const from = countries[Math.floor(Math.random()*countries.length)];
+    let to = countries[Math.floor(Math.random()*countries.length)];
+    
+    while(from === to){
+        to = countries[Math.floor(Math.random()*countries.length)];
     }
 
-    const start =
-    latLngToVector3(from.lat,from.lng,1.01);
+    // Cập nhật UI Log Panel trực tiếp
+    const logList = document.getElementById("realtimeLogs");
+    if(logList) {
+        if(logList.innerText.includes("Đang chờ")) logList.innerHTML = ''; // Xóa dòng chờ
+        const time = new Date().toLocaleTimeString('vi-VN', {hour12: false});
+        const logHTML = `
+            <div class="log-item">
+                <span class="log-time">[${time}]</span> 
+                <span class="log-threat">${from.name}</span> 
+                <i class="fa-solid fa-arrow-right-long" style="color:var(--text-muted); font-size: 10px;"></i> 
+                <span style="font-weight: 600;">${to.name}</span>
+            </div>`;
+        logList.insertAdjacentHTML('afterbegin', logHTML);
+        if(logList.children.length > 5) logList.lastChild.remove(); // Chỉ giữ 5 log gần nhất
+    }
 
-    const end =
-    latLngToVector3(to.lat,to.lng,1.01);
+    const start = latLngToVector3(from.lat, from.lng, 1.01);
+    const end = latLngToVector3(to.lat, to.lng, 1.01);
 
-    const geometry =
-    new THREE.BufferGeometry().setFromPoints([
-        start,
-        end
-    ]);
+    // Tính toán đỉnh của đường cong (nằm giữa start và end, nhô lên không trung)
+    const distance = start.distanceTo(end);
+    const mid = start.clone().lerp(end, 0.5);
+    const elevation = 1.01 + (distance * 0.45); // Độ cao vòng cung tỉ lệ thuận với khoảng cách
+    mid.normalize().multiplyScalar(elevation);
 
-    const material =
-    new THREE.LineBasicMaterial({
-        color:0xff3333
+    const curve = new THREE.QuadraticBezierCurve3(start, mid, end);
+    const points = curve.getPoints(45);
+    const geometry = new THREE.BufferGeometry().setFromPoints(points);
+
+    const material = new THREE.LineBasicMaterial({
+        color: 0xff4b5c,
+        transparent: true,
+        opacity: 1
     });
 
-    const line =
-    new THREE.Line(
-        geometry,
-        material
-    );
-
+    const line = new THREE.Line(geometry, material);
     scene.add(line);
 
-    setTimeout(()=>{
-        scene.remove(line);
-        geometry.dispose();
-        material.dispose();
-    },2000);
-}
-    setInterval(createAttack,500);
-/* ===== CLOUD ===== */
-
-const cloudGeometry = new THREE.SphereGeometry(
-    1.01,
-    128,
-    128
-);
-
-const cloudMaterial = new THREE.MeshPhongMaterial({
-
-    map: cloudTexture,
-
-    transparent:true,
-
-    opacity:0.42,
-
-    depthWrite:false
-
-});
-
-clouds = new THREE.Mesh(
-
-    cloudGeometry,
-
-    cloudMaterial
-
-);
-
-scene.add(clouds);
-
-
-/* ===== ATMOSPHERE ===== */
-
-const atmosphereGeometry = new THREE.SphereGeometry(
-    1.05,
-    128,
-    128
-);
-
-const atmosphereMaterial = new THREE.MeshBasicMaterial({
-
-    color:0x00ffff,
-
-    transparent:true,
-
-    opacity:0.18,
-
-    side:THREE.BackSide
-
-});
-
-atmosphere = new THREE.Mesh(
-
-    atmosphereGeometry,
-
-    atmosphereMaterial
-
-);
-
-scene.add(atmosphere);
-const pulseGeometry = new THREE.RingGeometry(
-
-1.18,
-
-1.22,
-
-128
-
-);
-
-const pulseMaterial = new THREE.MeshBasicMaterial({
-
-color:0x00ffff,
-
-transparent:true,
-
-opacity:0.22,
-
-side:THREE.DoubleSide
-
-});
-
-const pulse = new THREE.Mesh(
-
-pulseGeometry,
-
-pulseMaterial
-
-);
-
-pulse.rotation.x=Math.PI/2;
-
-scene.add(pulse);
-            /* =========================
-   OUTER GLOW
-========================= */
-
-const glowGeometry = new THREE.SphereGeometry(
-    1.12,
-    128,
-    128
-);
-
-const glowMaterial = new THREE.MeshBasicMaterial({
-
-    color:0x00ffff,
-
-    transparent:true,
-
-    opacity:0.06,
-
-    side:THREE.BackSide
-
-});
-
-const glow = new THREE.Mesh(
-
-    glowGeometry,
-
-    glowMaterial
-
-);
-
-scene.add(glow);
-            const starGeometry=new THREE.BufferGeometry();
-
-const starVertices=[];
-
-for(let i=0;i<8000;i++){
-
-starVertices.push(
-
-(Math.random()-0.5)*300,
-
-(Math.random()-0.5)*300,
-
-(Math.random()-0.5)*300
-
-);
-
-}
-
-starGeometry.setAttribute(
-
-'position',
-
-new THREE.Float32BufferAttribute(
-
-starVertices,
-
-3
-
-)
-
-);
-
-const starMaterial = new THREE.PointsMaterial({
-
-color:0xffffff,
-
-size:0.45,
-
-transparent:true,
-
-opacity:0.9
-
-});
-
-stars=new THREE.Points(
-
-starGeometry,
-
-starMaterial
-
-);
-
-scene.add(stars);
-            function animate(){
-
-requestAnimationFrame(animate);
-
-earth.rotation.y += 0.0015;
-
-clouds.rotation.y += 0.0019;
-
-atmosphere.rotation.y += 0.0007;
-
-stars.rotation.y += 0.0001;
-angle += 0.0016;
-
-camera.position.x = Math.sin(angle) * 0.25;
-
-camera.position.y = Math.sin(angle*0.45) * 0.09;
-
-camera.lookAt(earth.position);            
-renderer.render(scene,camera);
-starMaterial.opacity =
-
-0.65 +
-
-Math.sin(Date.now()*0.0015)*0.25;
-pulse.scale.x += 0.003;
-
-pulse.scale.y += 0.003;
-
-pulse.material.opacity -= 0.002;
-
-if(pulse.material.opacity<=0){
-
-pulse.scale.set(1,1,1);
-
-pulse.material.opacity=0.22;
-
-}
-light1.intensity =
-
-2 +
-
-Math.sin(Date.now()*0.0018)*0.35;
-}
-
-animate();
-            window.addEventListener("resize",()=>{
-
-const box=document.getElementById("attackContainer");
-
-camera.aspect=box.clientWidth/box.clientHeight;
-
-camera.updateProjectionMatrix();
-
-renderer.setSize(
-
-box.clientWidth,
-
-box.clientHeight
-
-);
-
-});
+    // Fade out mượt mà (giảm opacity dần thay vì xóa đột ngột sau 2 giây)
+    let fadeInterval = setInterval(()=>{
+        line.material.opacity -= 0.015;
+        if(line.material.opacity <= 0){
+            clearInterval(fadeInterval);
+            scene.remove(line);
+            geometry.dispose();
+            material.dispose();
         }
-const countries = [
+    }, 30);
+}
 
-{ name:"Vietnam", lat:16.047, lng:108.206 },
+// 4. Cập nhật hàm animate()
+function animate(){
+    requestAnimationFrame(animate);
 
-{ name:"Japan", lat:35.689, lng:139.692 },
+    // Giữ nguyên các hiệu ứng xoay môi trường
+    if(earth) earth.rotation.y += 0.0015;
+    if(clouds) clouds.rotation.y += 0.0019;
+    if(atmosphere) atmosphere.rotation.y += 0.0007;
+    if(stars) stars.rotation.y += 0.0001;
 
-{ name:"United States", lat:38.897, lng:-77.036 },
+    // Xóa bỏ đoạn tính toán camera.position thủ công (Math.sin/cos) ở code cũ. 
+    // Thay vào đó, ủy quyền xoay camera cho OrbitControls:
+    if(controls) controls.update();
 
-{ name:"France", lat:48.856, lng:2.352 },
+    if(starMaterial) starMaterial.opacity = 0.65 + Math.sin(Date.now()*0.0015)*0.25;
 
-{ name:"Brazil", lat:-15.793, lng:-47.882 }
+    // Hiệu ứng nhịp đập (pulse)
+    if(pulse) {
+        pulse.scale.x += 0.003;
+        pulse.scale.y += 0.003;
+        pulse.material.opacity -= 0.002;
+        if(pulse.material.opacity <= 0){
+            pulse.scale.set(1,1,1);
+            pulse.material.opacity = 0.22;
+        }
+    }
 
-];
-function latLngToVector3(lat,lng,r){
-
-const phi=(90-lat)*Math.PI/180;
-
-const theta=(lng+180)*Math.PI/180;
-
-return new THREE.Vector3(
-
--r*Math.sin(phi)*Math.cos(theta),
-
-r*Math.cos(phi),
-
-r*Math.sin(phi)*Math.sin(theta)
-
-);
-
+    renderer.render(scene, camera);
 }
 
     </script>
