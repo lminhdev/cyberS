@@ -2153,40 +2153,51 @@ function latLngToVector3(lat, lng, radius) {
     const y = (radius * Math.cos(phi));
     return new THREE.Vector3(x, y, z);
 }
-// Dữ liệu câu hỏi (Có thể mở rộng thêm)
+// Dữ liệu câu hỏi mới: Chủ đề Bảo vệ bản thân trên mạng
 const quizData = [
     {
-        question: "1. Trong phát triển web, lỗ hổng nào cho phép kẻ tấn công chèn mã JavaScript độc hại vào trình duyệt của người dùng khác?",
+        question: "1. Biện pháp nào sau đây là hiệu quả nhất để bảo vệ tài khoản của bạn ngay cả khi ai đó vô tình biết được mật khẩu?",
         options: [
-            "SQL Injection (Tiêm mã SQL)",
-            "Cross-Site Scripting (XSS)",
-            "DDoS (Tấn công từ chối dịch vụ)",
-            "Phishing (Tấn công giả mạo)"
+            "Đổi mật khẩu liên tục mỗi ngày",
+            "Bật Xác thực hai yếu tố (2FA)",
+            "Chỉ duyệt web bằng tab ẩn danh (Incognito)",
+            "Không bao giờ dùng mạng Wi-Fi công cộng"
         ],
         correctAnswer: 1,
-        explanation: "Chính xác! XSS xảy ra khi ứng dụng web nhận dữ liệu đầu vào không được kiểm tra kỹ và hiển thị lên trình duyệt, cho phép hacker chạy script độc hại đánh cắp cookie hoặc phiên đăng nhập."
+        explanation: "Chính xác! Xác thực 2 yếu tố (2FA) giống như một lớp khóa thứ hai. Dù hacker có mật khẩu, chúng vẫn không thể đăng nhập nếu không có mã xác nhận gửi đến điện thoại hoặc ứng dụng Authenticator của bạn."
     },
     {
-        question: "2. Kỹ thuật nào sau đây biến đổi mật khẩu thành một chuỗi ký tự cố định và KHÔNG thể dịch ngược lại (giải mã) bằng một khóa?",
+        question: "2. Bạn nhận được một email từ 'Ngân hàng' thông báo tài khoản bị khóa và yêu cầu click vào link để xác minh. Bạn nên làm gì?",
         options: [
-            "Encryption (Mã hóa)",
-            "Hashing (Băm dữ liệu)",
-            "Encoding (Mã hóa định dạng)",
-            "Obfuscation (Làm rối mã)"
-        ],
-        correctAnswer: 1,
-        explanation: "Đúng! Hashing (như SHA-256) là hàm một chiều. Các hệ thống an toàn chỉ lưu trữ mã băm của mật khẩu chứ không lưu mật khẩu gốc."
-    },
-    {
-        question: "3. Nguyên tắc bảo mật 'Zero Trust' có nghĩa là gì?",
-        options: [
-            "Tin tưởng mạng nội bộ, không tin tưởng mạng public",
-            "Sử dụng phần mềm diệt virus không tốn phí",
-            "Không tin tưởng mặc định bất kỳ ai hay thiết bị nào, kể cả bên trong mạng",
-            "Chỉ cấp quyền quản trị cho một người duy nhất"
+            "Click ngay vào link và điền thông tin để mở khóa",
+            "Trả lời email để hỏi xem họ có nhầm lẫn không",
+            "Bỏ qua email, tự gõ địa chỉ website thật của ngân hàng vào trình duyệt để kiểm tra",
+            "Chuyển tiếp email cho bạn bè để cảnh báo"
         ],
         correctAnswer: 2,
-        explanation: "Chính xác! 'Zero Trust' hoạt động với phương châm 'Không bao giờ tin tưởng, luôn luôn xác minh', yêu cầu xác thực liên tục bất kể người dùng đang ở đâu."
+        explanation: "Đúng rồi! Đây là dấu hiệu kinh điển của tấn công Phishing (Lừa đảo). Bạn tuyệt đối không click vào link lạ. Tự truy cập trang web chính thức hoặc gọi tổng đài ngân hàng là cách an toàn nhất để kiểm tra."
+    },
+    {
+        question: "3. Khi sử dụng Wi-Fi công cộng (không có mật khẩu) tại quán cà phê, rủi ro lớn nhất về bảo mật là gì?",
+        options: [
+            "Máy tính hoặc điện thoại của bạn sẽ chạy chậm hơn",
+            "Bạn sẽ phải xem nhiều quảng cáo hơn bình thường",
+            "Chủ quán cà phê có quyền xem toàn bộ lịch sử duyệt web từ trước đến nay của bạn",
+            "Kẻ gian dùng chung mạng có thể 'nghe lén' và đánh cắp thông tin nhạy cảm của bạn"
+        ],
+        correctAnswer: 3,
+        explanation: "Chính xác! Mạng Wi-Fi công cộng thường không được mã hóa. Kẻ xấu có thể dùng kỹ thuật Man-in-the-Middle (Đứng giữa) để chặn bắt dữ liệu của bạn. Hạn chế đăng nhập hoặc thanh toán qua Wi-Fi lạ nhé!"
+    },
+    {
+        question: "4. Tại sao bạn luôn được các chuyên gia khuyên phải cập nhật hệ điều hành và ứng dụng lên phiên bản mới nhất?",
+        options: [
+            "Để giải phóng dung lượng bộ nhớ cho máy",
+            "Để vá các lỗ hổng bảo mật mà hacker có thể lợi dụng",
+            "Để thiết bị chạy nhanh hơn gấp đôi",
+            "Để thay đổi giao diện cho đẹp mắt hơn"
+        ],
+        correctAnswer: 1,
+        explanation: "Chuẩn xác! Các bản cập nhật phần mềm ngoài việc thêm tính năng mới thì quan trọng nhất là chứa các 'bản vá' (patch). Chúng giúp bịt kín những lỗ hổng bảo mật vừa được phát hiện trước khi hacker kịp lợi dụng."
     }
 ];
 
